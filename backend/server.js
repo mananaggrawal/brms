@@ -143,8 +143,9 @@ function convertFromGoRules(body) {
         break;
 
       case 'decisionTableNode': {
-        const inputs = (content.inputs || []).map(i => ({ field: i.field, label: i.name || i.field }));
-        const outputs = (content.outputs || []).map(o => ({ field: o.field, label: o.name || o.field }));
+        // field may be missing on placeholder columns — fallback to name as field path
+        const inputs = (content.inputs || []).map(i => ({ field: i.field || i.name || 'input', label: i.name || i.field || 'Input' }));
+        const outputs = (content.outputs || []).map(o => ({ field: o.field || o.name || 'output', label: o.name || o.field || 'Output' }));
         const inputIds = (content.inputs || []).map(i => i.id);
         const outputIds = (content.outputs || []).map(o => o.id);
         const rows = (content.rules || []).map(rule => ({
@@ -164,9 +165,29 @@ function convertFromGoRules(body) {
       }
 
       case 'functionNode': {
-        // Strip GoRules-specific imports that our engine doesn't support
         const code = (content.source || '').replace(/^import\s+\w+\s+from\s+['"]zen['"];\n?/m, '');
         nodeData = { label: n.name || 'Function', code };
+        break;
+      }
+
+      case 'switchNode': {
+        // GoRules statements: [{id, condition, isDefault}]
+        // We preserve statement.id as the branch port so edges with sourceHandle=statement.id still route correctly
+        const statements = content.statements || [];
+        let ifCount = 0;
+        const branches = statements.map(stmt => {
+          if (stmt.isDefault) {
+            return { id: stmt.id, label: 'Else', expression: '', port: stmt.id, isElse: true };
+          }
+          const label = ifCount === 0 ? 'If' : 'Else If';
+          ifCount++;
+          return { id: stmt.id, label, expression: stmt.condition || '', port: stmt.id };
+        });
+        nodeData = {
+          label: n.name || 'Switch',
+          hitPolicy: content.hitPolicy || 'first',
+          branches,
+        };
         break;
       }
 
