@@ -237,10 +237,8 @@ export default function GraphEditor() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [showSimulator, setShowSimulator] = useState(false);
   const [simulatorInput, setSimulatorInput] = useState('{\n  \n}');
-  const [simulatorHeight, setSimulatorHeight] = useState(360);
-  const resizingRef = useRef(false);
-  const resizeStartY = useRef(0);
-  const resizeStartH = useRef(320);
+  const [activeRightTab, setActiveRightTab] = useState<'node' | 'simulator'>('node');
+  const [nodeConsoleLogs, setNodeConsoleLogs] = useState<Record<string, string[]>>({});
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [saved, setSaved] = useState(true);
@@ -318,6 +316,7 @@ export default function GraphEditor() {
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedNodeId(node.id);
+    setActiveRightTab('node');
   }, []);
 
   const onPaneClick = useCallback(() => {
@@ -383,6 +382,13 @@ export default function GraphEditor() {
 
   // Apply trace highlights to nodes after simulation
   const handleSimulationResult = useCallback((result: SimulationResult | null) => {
+    if (!result) {
+      setNodeConsoleLogs({});
+    } else {
+      const logs: Record<string, string[]> = {};
+      result.trace.forEach(e => { if (e.logs?.length) logs[e.nodeId] = e.logs; });
+      setNodeConsoleLogs(logs);
+    }
     setNodes(nds => nds.map(n => {
       if (!result) {
         const d = { ...n.data } as Record<string, unknown>;
@@ -397,21 +403,6 @@ export default function GraphEditor() {
     }));
   }, []);
 
-  // Resize simulator panel
-  const onResizeMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    resizingRef.current = true;
-    resizeStartY.current = e.clientY;
-    resizeStartH.current = simulatorHeight;
-    const onMove = (ev: MouseEvent) => {
-      if (!resizingRef.current) return;
-      const delta = resizeStartY.current - ev.clientY;
-      setSimulatorHeight(Math.max(260, Math.min(700, resizeStartH.current + delta)));
-    };
-    const onUp = () => { resizingRef.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  }, [simulatorHeight]);
 
   const handleDeleteNode = useCallback(() => {
     if (!selectedNode) return;
@@ -490,6 +481,7 @@ export default function GraphEditor() {
             <FunctionEditor
               data={data as FunctionData}
               onChange={d => updateNodeData(selectedNode.id, d)}
+              consoleLogs={nodeConsoleLogs[selectedNode.id]}
             />
           )}
           {type === 'expression' && (
@@ -578,11 +570,12 @@ export default function GraphEditor() {
 
         <button
           onClick={() => {
-            if (showSimulator) {
+            if (showSimulator && activeRightTab === 'simulator') {
               handleSimulationResult(null);
               setShowSimulator(false);
             } else {
               setShowSimulator(true);
+              setActiveRightTab('simulator');
             }
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg transition-colors font-medium ${showSimulator ? 'bg-brand-500 text-white border-brand-500' : 'text-brand-500 border-brand-200 hover:bg-brand-50'}`}
@@ -668,37 +661,75 @@ export default function GraphEditor() {
             </ReactFlow>
           </div>
 
-          {/* Right panel — node editor only */}
-          {selectedNode && (
+          {/* Right panel — node editor + simulator as tabs */}
+          {(selectedNode || showSimulator) && (
             <div
               className={`bg-white border-l border-slate-200 flex flex-col flex-shrink-0 ${
-                selectedNode.type === 'decisionTable' ? 'w-[620px]' : 'w-80'
+                activeRightTab === 'node' && selectedNode?.type === 'decisionTable' ? 'w-[640px]' : 'w-[400px]'
               }`}
             >
-              {renderPanel()}
+              {/* Tab bar */}
+              <div className="flex items-center border-b border-slate-200 bg-slate-50 flex-shrink-0">
+                {selectedNode && (
+                  <button
+                    onClick={() => setActiveRightTab('node')}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
+                      activeRightTab === 'node'
+                        ? 'border-brand-500 text-brand-600 bg-white'
+                        : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Node
+                  </button>
+                )}
+                {showSimulator && (
+                  <button
+                    onClick={() => setActiveRightTab('simulator')}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
+                      activeRightTab === 'simulator'
+                        ? 'border-brand-500 text-brand-600 bg-white'
+                        : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Simulator
+                  </button>
+                )}
+                <div className="flex-1" />
+                {/* Close the active panel */}
+                <button
+                  onClick={() => {
+                    if (activeRightTab === 'node') {
+                      setSelectedNodeId(null);
+                      if (showSimulator) setActiveRightTab('simulator');
+                    } else {
+                      handleSimulationResult(null);
+                      setShowSimulator(false);
+                      if (selectedNode) setActiveRightTab('node');
+                    }
+                  }}
+                  className="px-3 py-2.5 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+
+              {/* Tab content */}
+              <div className="flex-1 min-h-0 overflow-hidden">
+                {activeRightTab === 'node' && renderPanel()}
+                {activeRightTab === 'simulator' && (
+                  <Simulator
+                    rulesetId={id!}
+                    inputJson={simulatorInput}
+                    onInputChange={setSimulatorInput}
+                    onResult={handleSimulationResult}
+                  />
+                )}
+              </div>
             </div>
           )}
         </div>
-
-        {/* Bottom simulator panel */}
-        {showSimulator && (
-          <div className="flex flex-col flex-shrink-0 bg-white border-t border-slate-200" style={{ height: simulatorHeight }}>
-            {/* Resize handle */}
-            <div
-              className="h-1.5 bg-slate-100 hover:bg-brand-200 cursor-row-resize flex-shrink-0 transition-colors"
-              onMouseDown={onResizeMouseDown}
-            />
-            <div className="flex-1 overflow-hidden">
-              <Simulator
-                rulesetId={id!}
-                onClose={() => { handleSimulationResult(null); setShowSimulator(false); }}
-                inputJson={simulatorInput}
-                onInputChange={setSimulatorInput}
-                onResult={handleSimulationResult}
-              />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
