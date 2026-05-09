@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* ReactFlow custom styles */
+.react-flow__node {
+  font-family: 'Inter', sans-serif;
+}
+
+.react-flow__edge-path {
+  stroke: #94a3b8;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #4f6ef7;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+}
+
+.react-flow__handle:hover {
+  background: #4f6ef7;
+  border-color: #4f6ef7;
+}
+
+.react-flow__handle-connecting {
+  background: #4f6ef7;
+  border-color: #4f6ef7;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Monaco editor container */
+.monaco-container {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}

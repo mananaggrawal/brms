@@ -1,0 +1,4560 @@
+{
+  "rulesets": [
+    {
+      "id": "e7c02888-a690-4345-9e02-255b842ffd75",
+      "name": "Credit Limit Assessment",
+      "description": "Lending decision for credit card limit based on bureau data and income",
+      "status": "draft",
+      "createdAt": "2026-05-08T12:32:42.594Z",
+      "updatedAt": "2026-05-09T09:12:05.530Z",
+      "nodes": [
+        {
+          "id": "req",
+          "type": "request",
+          "position": {
+            "x": 60,
+            "y": 200
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "dt1",
+          "type": "decisionTable",
+          "position": {
+            "x": 630,
+            "y": 200
+          },
+          "data": {
+            "label": "Age Check",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "input.field",
+                "label": "Input"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "output.result",
+                "label": "Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "r1",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 22"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "id": "r2",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 23"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "id": "r3",
+                "conditions": [
+                  {
+                    "expression": "customer.age > 40"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "hailo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "res",
+          "type": "response",
+          "position": {
+            "x": 1149.0037032562698,
+            "y": 299.5925085272145
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": [
+              {
+                "field": "output.result",
+                "label": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "517fe4a6-dfd7-456f-a2f7-f9385c79d2df",
+          "type": "expression",
+          "position": {
+            "x": 208,
+            "y": 124
+          },
+          "data": {
+            "label": "Expression",
+            "expression": "",
+            "outputField": "result.flag",
+            "trueValue": "true",
+            "falseValue": "false"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "req",
+          "target": "dt1",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "e2",
+          "source": "dt1",
+          "target": "res",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "9ff38b86-37dd-4028-af64-dd62a8844e32",
+      "name": "test",
+      "description": "",
+      "status": "published",
+      "createdAt": "2026-05-08T12:33:49.407Z",
+      "updatedAt": "2026-05-08T13:10:14.995Z",
+      "nodes": [
+        {
+          "id": "node-request",
+          "type": "request",
+          "position": {
+            "x": 60,
+            "y": 220
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "node-response",
+          "type": "response",
+          "position": {
+            "x": 700,
+            "y": 220
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": [
+              {
+                "field": "output.result",
+                "label": ""
+              },
+              {
+                "field": "",
+                "label": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "e93dfb73-d1aa-4014-8fe7-41bbe5d2f629",
+          "type": "decisionTable",
+          "position": {
+            "x": 348,
+            "y": 5
+          },
+          "data": {
+            "label": "Decision Table",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "input.field",
+                "label": "Input"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "output.result",
+                "label": "Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "3d568aff-1395-4140-bf76-3d4aa26b46de",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 22"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "true"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "2b59c299-fbe3-47bc-9835-52286ef48a73",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 23"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "false"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "f96b5c7c-8012-4e7a-843c-587da7776792",
+                "conditions": [
+                  {
+                    "expression": "customer.age > 40"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "hailo"
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "0cefa9a5-8908-46ff-bb1c-8be78bee590a",
+          "source": "node-request",
+          "target": "e93dfb73-d1aa-4014-8fe7-41bbe5d2f629",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "6abf259a-4d39-4886-a338-6966617d87b9",
+          "source": "e93dfb73-d1aa-4014-8fe7-41bbe5d2f629",
+          "target": "node-response",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "600952e7-9296-4bf2-a9a8-927636094eb4",
+      "name": "test",
+      "description": "",
+      "status": "published",
+      "createdAt": "2026-05-08T12:45:42.080Z",
+      "updatedAt": "2026-05-08T12:51:11.328Z",
+      "nodes": [],
+      "edges": []
+    },
+    {
+      "id": "9e799bee-0949-49fb-9955-890bf033d74b",
+      "name": "Credit Limit Assessment",
+      "description": "Lending decision for credit card limit based on bureau data and income",
+      "status": "draft",
+      "createdAt": "2026-05-08T13:15:03.187Z",
+      "updatedAt": "2026-05-09T09:20:39.073Z",
+      "nodes": [
+        {
+          "id": "req",
+          "type": "request",
+          "position": {
+            "x": 60,
+            "y": 200
+          },
+          "data": {
+            "label": "Request",
+            "_traceStatus": "executed",
+            "_traceMatched": null
+          }
+        },
+        {
+          "id": "dt1",
+          "type": "decisionTable",
+          "position": {
+            "x": 630,
+            "y": 200
+          },
+          "data": {
+            "label": "Age Check",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "input.field",
+                "label": "Input"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "output.result",
+                "label": "Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "r1",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 22"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "id": "r2",
+                "conditions": [
+                  {
+                    "expression": "customer.age > 23"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "id": "r3",
+                "conditions": [
+                  {
+                    "expression": "customer.age > 40"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "hailo"
+                  }
+                ]
+              }
+            ],
+            "_traceStatus": "executed",
+            "_traceMatched": 1
+          }
+        },
+        {
+          "id": "res",
+          "type": "response",
+          "position": {
+            "x": 1149.0037032562698,
+            "y": 299.5925085272145
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": [
+              {
+                "field": "output.result",
+                "label": ""
+              }
+            ],
+            "_traceStatus": "executed",
+            "_traceMatched": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "req",
+          "target": "dt1",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "e2",
+          "source": "dt1",
+          "target": "res",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "6d18b85a-c483-40b3-a239-1771ee3c021e",
+      "name": "Imported Ruleset",
+      "description": "Imported from GoRules",
+      "status": "draft",
+      "createdAt": "2026-05-09T09:14:07.860Z",
+      "updatedAt": "2026-05-09T09:14:07.861Z",
+      "nodes": [
+        {
+          "id": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "type": "request",
+          "position": {
+            "x": -1050,
+            "y": 135
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "type": "response",
+          "position": {
+            "x": 1870,
+            "y": 20
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": []
+          }
+        },
+        {
+          "id": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 345
+          },
+          "data": {
+            "label": "Bureau Rule: Credit Score",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.credit_score",
+                "label": "Customer Credit Score"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.credit_score",
+                "label": "Bureau Rule: Credit Score"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": ">= 750"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "fbcc524d-f7be-4bcc-ba09-6531aecf41d2",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 570
+          },
+          "data": {
+            "label": "Bureau Rule: Loan Default",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.loan_default_exists",
+                "label": "Customer Loan Default"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.loan_default_exists",
+                "label": "Bureau Rule: Loan Default"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 460
+          },
+          "data": {
+            "label": "Bureau Rule: Overdue Accounts",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.overdue_accounts",
+                "label": "Customer Overdue Accounts"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.overdue_accounts",
+                "label": "Bureau Rule: Overdue Accounts"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "== 0"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "type": "function",
+          "position": {
+            "x": 405,
+            "y": 1270
+          },
+          "data": {
+            "label": "Bureau Limit Calculator",
+            "code": "\nexport const handler = async (input) => {\n  console.log(\"Input received:\", input);\n\n  const eligible_account_type_01_hca = input.customer.eligible_account_type_01_hca;\n  const eligible_account_type_02_hca = input.customer.eligible_account_type_02_hca;\n  const eligible_account_type_03_hca = input.customer.eligible_account_type_03_hca;\n  const eligible_account_type_05_hca = input.customer.eligible_account_type_05_hca;\n  const eligible_account_type_09_hca = input.customer.eligible_account_type_09_hca;\n  const eligible_account_type_10_hca = input.customer.eligible_account_type_10_hca;\n  const eligible_account_type_50_hca = input.customer.eligible_account_type_50_hca;\n  const eligible_account_type_51_hca = input.customer.eligible_account_type_51_hca;\n  const eligible_account_type_61_hca = input.customer.eligible_account_type_61_hca;\n\n  console.log(\"Eligible account types:\", {\n    eligible_account_type_01_hca,\n    eligible_account_type_02_hca,\n    eligible_account_type_03_hca,\n    eligible_account_type_05_hca,\n    eligible_account_type_09_hca,\n    eligible_account_type_10_hca,\n    eligible_account_type_50_hca,\n    eligible_account_type_51_hca,\n    eligible_account_type_61_hca\n  });\n\n  const bureau_policy = input.bureau_policy;\n  console.log(\"Bureau policy:\", bureau_policy);\n\n  let recommended_bureau_limit;\n  let account_type_01_limit;\n  let account_type_02_limit;\n  let account_type_03_limit;\n  let account_type_05_limit;\n  let account_type_09_limit;\n  let account_type_10_limit;\n  let account_type_50_limit;\n  let account_type_51_limit;\n  let account_type_61_limit;\n\n  let calculatedLimitFlag = false;\n\n  if (eligible_account_type_01_hca >= 300000) {\n    if (eligible_account_type_01_hca <= 500000) {\n      account_type_01_limit = 0.1 * eligible_account_type_01_hca;\n    } else if (eligible_account_type_01_hca <= 1000000) {\n      account_type_01_limit = 0.15 * eligible_account_type_01_hca;\n    } else {\n      account_type_01_limit = 0.20 * eligible_account_type_01_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 01 limit:\", account_type_01_limit);\n  }\n\n  if (eligible_account_type_02_hca >= 2000000) {\n    if (eligible_account_type_02_hca <= 3000000) {\n      account_type_02_limit = 0.03 * eligible_account_type_02_hca;\n    } else if (eligible_account_type_02_hca <= 5000000) {\n      account_type_02_limit = 0.04 * eligible_account_type_02_hca;\n    } else {\n      account_type_02_limit = 0.05 * eligible_account_type_02_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 02 limit:\", account_type_02_limit);\n  }\n\n  if (eligible_account_type_03_hca >= 1000000) {\n    if (eligible_account_type_03_hca <= 2500000) {\n      account_type_03_limit = 0.03 * eligible_account_type_03_hca;\n    } else if (eligible_account_type_03_hca <= 5000000) {\n      account_type_03_limit = 0.04 * eligible_account_type_03_hca;\n    } else {\n      account_type_03_limit = 0.05 * eligible_account_type_03_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 03 limit:\", account_type_03_limit);\n  }\n\n  if (eligible_account_type_05_hca >= 200000) {\n    if (eligible_account_type_05_hca <= 1000000) {\n      account_type_05_limit = 0.1 * eligible_account_type_05_hca;\n    } else if (eligible_account_type_05_hca <= 2000000) {\n      account_type_05_limit = 0.15 * eligible_account_type_05_hca;\n    } else {\n      account_type_05_limit = 0.2 * eligible_account_type_05_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 05 limit:\", account_type_05_limit);\n  }\n\n  if (eligible_account_type_09_hca >= 200000) {\n    if (eligible_account_type_09_hca <= 1000000) {\n      account_type_09_limit = 0.1 * eligible_account_type_09_hca;\n    } else if (eligible_account_type_09_hca <= 2000000) {\n      account_type_09_limit = 0.15 * eligible_account_type_09_hca;\n    } else {\n      account_type_09_limit = 0.2 * eligible_account_type_09_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 09 limit:\", account_type_09_limit);\n  }\n\n  if (eligible_account_type_10_hca >= 60000) {\n    account_type_10_limit = eligible_account_type_10_hca;\n    calculatedLimitFlag = true;\n    console.log(\"Account type 10 limit:\", account_type_10_limit);\n  }\n\n  if (eligible_account_type_50_hca >= 200000) {\n    if (eligible_account_type_50_hca <= 1000000) {\n      account_type_50_limit = 0.1 * eligible_account_type_50_hca;\n    } else if (eligible_account_type_50_hca <= 2000000) {\n      account_type_50_limit = 0.15 * eligible_account_type_50_hca;\n    } else {\n      account_type_50_limit = 0.2 * eligible_account_type_50_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 50 limit:\", account_type_50_limit);\n  }\n\n  if (eligible_account_type_51_hca >= 200000) {\n    if (eligible_account_type_51_hca <= 1000000) {\n      account_type_51_limit = 0.1 * eligible_account_type_51_hca;\n    } else if (eligible_account_type_51_hca <= 2000000) {\n      account_type_51_limit = 0.15 * eligible_account_type_51_hca;\n    } else {\n      account_type_51_limit = 0.2 * eligible_account_type_51_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 51 limit:\", account_type_51_limit);\n  }\n\n  if (eligible_account_type_61_hca >= 200000) {\n    if (eligible_account_type_61_hca <= 1000000) {\n      account_type_61_limit = 0.1 * eligible_account_type_61_hca;\n    } else if (eligible_account_type_61_hca <= 2000000) {\n      account_type_61_limit = 0.15 * eligible_account_type_61_hca;\n    } else {\n      account_type_61_limit = 0.2 * eligible_account_type_61_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 61 limit:\", account_type_61_limit);\n  }\n\n  if (!calculatedLimitFlag) {\n    console.log(\"No limit calculated, rejecting.\");\n    recommended_bureau_limit = 0;\n    return { recommended_bureau_limit };\n  }\n\n  let maxLimit = Math.max(\n    account_type_01_limit || 0,\n    account_type_02_limit || 0,\n    account_type_03_limit || 0,\n    account_type_05_limit || 0,\n    account_type_09_limit || 0,\n    account_type_10_limit || 0,\n    account_type_50_limit || 0,\n    account_type_51_limit || 0,\n    account_type_61_limit || 0\n  );\n\n  maxLimit = Math.floor(maxLimit / 1000) * 1000;\n\n  recommended_bureau_limit = maxLimit;\n\n  console.log(\"Maximum limit calculated:\", maxLimit);\n\n  return { recommended_bureau_limit };\n};\n"
+          }
+        },
+        {
+          "id": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "type": "decisionTable",
+          "position": {
+            "x": 1620,
+            "y": 1260
+          },
+          "data": {
+            "label": "Bureau Policy Decision",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "bureau_rule.credit_score",
+                "label": "Bureau Credit Score Rule"
+              },
+              {
+                "field": "bureau_rule.overdue_accounts",
+                "label": "Bureau Overdue Accounts Rule"
+              },
+              {
+                "field": "bureau_rule.loan_default_exists",
+                "label": "Bureau Loan Default Rule"
+              },
+              {
+                "field": "recommended_bureau_limit",
+                "label": "Recommended Bureau Limit"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_policy.result",
+                "label": "Bureau Credit Score Flag"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "fbcc524d-f7be-4bcc-ba09-6531aecf41d2",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "eda577ac-c4b2-41aa-9ec1-016f27417278",
+                "conditions": [
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "0"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "608109b8-39dd-4426-81d8-2a412d45b1e3",
+                "conditions": [
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "type": "decisionTable",
+          "position": {
+            "x": 965,
+            "y": 1415
+          },
+          "data": {
+            "label": "Card Variant Selector",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "recommended_bureau_limit",
+                "label": "Recommended Bureau Limit"
+              },
+              {
+                "field": "customer.gender",
+                "label": "Customer Gender"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "card_variant",
+                "label": "Card Variant"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "< 25_000"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "null"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ">= 25_000 and <= 49_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "48fa817b-79fc-46e9-a9ba-bfedd67f7994",
+                "conditions": [
+                  {
+                    "expression": ">= 50_000 and <= 99_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "9c461ba2-beeb-4433-a41d-af502cb666ca",
+                "conditions": [
+                  {
+                    "expression": ">= 100_000 and <= 199_999"
+                  },
+                  {
+                    "expression": "'FEMALE'"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\", \"tiara\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "86f19d6b-ac3d-4808-8b4a-fc8ed4029f46",
+                "conditions": [
+                  {
+                    "expression": ">= 100_000 and <= 199_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "87173dc3-f735-4e46-ac75-b629d7d495a4",
+                "conditions": [
+                  {
+                    "expression": ">= 200_000"
+                  },
+                  {
+                    "expression": "'FEMALE'"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\", \"tiara\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "917b436d-120f-4156-8687-104727027a0f",
+                "conditions": [
+                  {
+                    "expression": ">= 200_000"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "2a8e2459-95f9-47d1-a692-a0208fa5664c",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "62d28954-c265-4c0f-95cd-edc9496786a7",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2e06bd08-8c04-40b6-8688-3a1bf1690dab",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "51a6be84-62e6-4aa3-befe-bedea95ea967",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "bbb1cd9c-fe3a-4dea-a2b8-2e194e4cef08",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "6ed15155-43dd-433a-a758-439ae63017c1",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "383d4c69-f2ac-47c7-9a83-091a6b57ed3c",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "a92e7844-f3ac-49c5-bc7a-42808da5a946",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "95f946e0-0dff-40df-a0cb-29d94f575685",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d3367b18-5fa3-4f65-baeb-e6582712aa4c",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "1019cac3-1b68-486e-9cb5-9f50ad100fa1",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "ae64cb9d-c0bd-4b86-80bc-b66c3a921c91",
+          "source": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "5b7f04cd-c024-4316-8506-70e064598195",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "507ee32e-158d-4e02-b9d6-488f28ee6627",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "eb5028b0-38df-4416-b8c2-1f5279b70f35",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2d16fd87-50e4-49dd-a1dd-1a01ef5a8805",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "9bfca942-594b-46e7-82db-6b98d690dfcc",
+          "source": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "4f238518-1ac0-4ba8-80a6-7647a68cf9f7",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "dd23c04f-21eb-4a03-856a-071fd1e88219",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "3f42980d-c2a5-46ad-9f09-1a7c38673ebd",
+      "name": "Credit Limit Assessment",
+      "description": "Lending decision for credit card limit based on bureau data and income",
+      "status": "draft",
+      "createdAt": "2026-05-09T09:14:21.471Z",
+      "updatedAt": "2026-05-09T09:14:21.471Z",
+      "nodes": [
+        {
+          "id": "req",
+          "type": "request",
+          "position": {
+            "x": 60,
+            "y": 200
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "dt1",
+          "type": "decisionTable",
+          "position": {
+            "x": 630,
+            "y": 200
+          },
+          "data": {
+            "label": "Age Check",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "input.field",
+                "label": "Input"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "output.result",
+                "label": "Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "r1",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 22"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "id": "r2",
+                "conditions": [
+                  {
+                    "expression": "customer.age = 23"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "false"
+                  }
+                ]
+              },
+              {
+                "id": "r3",
+                "conditions": [
+                  {
+                    "expression": "customer.age > 40"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "hailo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "res",
+          "type": "response",
+          "position": {
+            "x": 1149.0037032562698,
+            "y": 299.5925085272145
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": [
+              {
+                "field": "output.result",
+                "label": ""
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "req",
+          "target": "dt1",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "e2",
+          "source": "dt1",
+          "target": "res",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "fa32a6d3-47c9-43d8-ad5d-d8bbd72fc70d",
+      "name": "Imported Ruleset",
+      "description": "Imported from GoRules",
+      "status": "draft",
+      "createdAt": "2026-05-09T09:15:00.514Z",
+      "updatedAt": "2026-05-09T09:15:03.546Z",
+      "nodes": [
+        {
+          "id": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "type": "request",
+          "position": {
+            "x": -1050,
+            "y": 135
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "type": "response",
+          "position": {
+            "x": 1870,
+            "y": 20
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": []
+          }
+        },
+        {
+          "id": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 345
+          },
+          "data": {
+            "label": "Bureau Rule: Credit Score",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.credit_score",
+                "label": "Customer Credit Score"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.credit_score",
+                "label": "Bureau Rule: Credit Score"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": ">= 750"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "fbcc524d-f7be-4bcc-ba09-6531aecf41d2",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 570
+          },
+          "data": {
+            "label": "Bureau Rule: Loan Default",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.loan_default_exists",
+                "label": "Customer Loan Default"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.loan_default_exists",
+                "label": "Bureau Rule: Loan Default"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "type": "decisionTable",
+          "position": {
+            "x": 20,
+            "y": 460
+          },
+          "data": {
+            "label": "Bureau Rule: Overdue Accounts",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.overdue_accounts",
+                "label": "Customer Overdue Accounts"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_rule.overdue_accounts",
+                "label": "Bureau Rule: Overdue Accounts"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "== 0"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "type": "function",
+          "position": {
+            "x": 405,
+            "y": 1270
+          },
+          "data": {
+            "label": "Bureau Limit Calculator",
+            "code": "\nexport const handler = async (input) => {\n  console.log(\"Input received:\", input);\n\n  const eligible_account_type_01_hca = input.customer.eligible_account_type_01_hca;\n  const eligible_account_type_02_hca = input.customer.eligible_account_type_02_hca;\n  const eligible_account_type_03_hca = input.customer.eligible_account_type_03_hca;\n  const eligible_account_type_05_hca = input.customer.eligible_account_type_05_hca;\n  const eligible_account_type_09_hca = input.customer.eligible_account_type_09_hca;\n  const eligible_account_type_10_hca = input.customer.eligible_account_type_10_hca;\n  const eligible_account_type_50_hca = input.customer.eligible_account_type_50_hca;\n  const eligible_account_type_51_hca = input.customer.eligible_account_type_51_hca;\n  const eligible_account_type_61_hca = input.customer.eligible_account_type_61_hca;\n\n  console.log(\"Eligible account types:\", {\n    eligible_account_type_01_hca,\n    eligible_account_type_02_hca,\n    eligible_account_type_03_hca,\n    eligible_account_type_05_hca,\n    eligible_account_type_09_hca,\n    eligible_account_type_10_hca,\n    eligible_account_type_50_hca,\n    eligible_account_type_51_hca,\n    eligible_account_type_61_hca\n  });\n\n  const bureau_policy = input.bureau_policy;\n  console.log(\"Bureau policy:\", bureau_policy);\n\n  let recommended_bureau_limit;\n  let account_type_01_limit;\n  let account_type_02_limit;\n  let account_type_03_limit;\n  let account_type_05_limit;\n  let account_type_09_limit;\n  let account_type_10_limit;\n  let account_type_50_limit;\n  let account_type_51_limit;\n  let account_type_61_limit;\n\n  let calculatedLimitFlag = false;\n\n  if (eligible_account_type_01_hca >= 300000) {\n    if (eligible_account_type_01_hca <= 500000) {\n      account_type_01_limit = 0.1 * eligible_account_type_01_hca;\n    } else if (eligible_account_type_01_hca <= 1000000) {\n      account_type_01_limit = 0.15 * eligible_account_type_01_hca;\n    } else {\n      account_type_01_limit = 0.20 * eligible_account_type_01_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 01 limit:\", account_type_01_limit);\n  }\n\n  if (eligible_account_type_02_hca >= 2000000) {\n    if (eligible_account_type_02_hca <= 3000000) {\n      account_type_02_limit = 0.03 * eligible_account_type_02_hca;\n    } else if (eligible_account_type_02_hca <= 5000000) {\n      account_type_02_limit = 0.04 * eligible_account_type_02_hca;\n    } else {\n      account_type_02_limit = 0.05 * eligible_account_type_02_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 02 limit:\", account_type_02_limit);\n  }\n\n  if (eligible_account_type_03_hca >= 1000000) {\n    if (eligible_account_type_03_hca <= 2500000) {\n      account_type_03_limit = 0.03 * eligible_account_type_03_hca;\n    } else if (eligible_account_type_03_hca <= 5000000) {\n      account_type_03_limit = 0.04 * eligible_account_type_03_hca;\n    } else {\n      account_type_03_limit = 0.05 * eligible_account_type_03_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 03 limit:\", account_type_03_limit);\n  }\n\n  if (eligible_account_type_05_hca >= 200000) {\n    if (eligible_account_type_05_hca <= 1000000) {\n      account_type_05_limit = 0.1 * eligible_account_type_05_hca;\n    } else if (eligible_account_type_05_hca <= 2000000) {\n      account_type_05_limit = 0.15 * eligible_account_type_05_hca;\n    } else {\n      account_type_05_limit = 0.2 * eligible_account_type_05_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 05 limit:\", account_type_05_limit);\n  }\n\n  if (eligible_account_type_09_hca >= 200000) {\n    if (eligible_account_type_09_hca <= 1000000) {\n      account_type_09_limit = 0.1 * eligible_account_type_09_hca;\n    } else if (eligible_account_type_09_hca <= 2000000) {\n      account_type_09_limit = 0.15 * eligible_account_type_09_hca;\n    } else {\n      account_type_09_limit = 0.2 * eligible_account_type_09_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 09 limit:\", account_type_09_limit);\n  }\n\n  if (eligible_account_type_10_hca >= 60000) {\n    account_type_10_limit = eligible_account_type_10_hca;\n    calculatedLimitFlag = true;\n    console.log(\"Account type 10 limit:\", account_type_10_limit);\n  }\n\n  if (eligible_account_type_50_hca >= 200000) {\n    if (eligible_account_type_50_hca <= 1000000) {\n      account_type_50_limit = 0.1 * eligible_account_type_50_hca;\n    } else if (eligible_account_type_50_hca <= 2000000) {\n      account_type_50_limit = 0.15 * eligible_account_type_50_hca;\n    } else {\n      account_type_50_limit = 0.2 * eligible_account_type_50_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 50 limit:\", account_type_50_limit);\n  }\n\n  if (eligible_account_type_51_hca >= 200000) {\n    if (eligible_account_type_51_hca <= 1000000) {\n      account_type_51_limit = 0.1 * eligible_account_type_51_hca;\n    } else if (eligible_account_type_51_hca <= 2000000) {\n      account_type_51_limit = 0.15 * eligible_account_type_51_hca;\n    } else {\n      account_type_51_limit = 0.2 * eligible_account_type_51_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 51 limit:\", account_type_51_limit);\n  }\n\n  if (eligible_account_type_61_hca >= 200000) {\n    if (eligible_account_type_61_hca <= 1000000) {\n      account_type_61_limit = 0.1 * eligible_account_type_61_hca;\n    } else if (eligible_account_type_61_hca <= 2000000) {\n      account_type_61_limit = 0.15 * eligible_account_type_61_hca;\n    } else {\n      account_type_61_limit = 0.2 * eligible_account_type_61_hca;\n    }\n    calculatedLimitFlag = true;\n    console.log(\"Account type 61 limit:\", account_type_61_limit);\n  }\n\n  if (!calculatedLimitFlag) {\n    console.log(\"No limit calculated, rejecting.\");\n    recommended_bureau_limit = 0;\n    return { recommended_bureau_limit };\n  }\n\n  let maxLimit = Math.max(\n    account_type_01_limit || 0,\n    account_type_02_limit || 0,\n    account_type_03_limit || 0,\n    account_type_05_limit || 0,\n    account_type_09_limit || 0,\n    account_type_10_limit || 0,\n    account_type_50_limit || 0,\n    account_type_51_limit || 0,\n    account_type_61_limit || 0\n  );\n\n  maxLimit = Math.floor(maxLimit / 1000) * 1000;\n\n  recommended_bureau_limit = maxLimit;\n\n  console.log(\"Maximum limit calculated:\", maxLimit);\n\n  return { recommended_bureau_limit };\n};\n"
+          }
+        },
+        {
+          "id": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "type": "decisionTable",
+          "position": {
+            "x": 1620,
+            "y": 1260
+          },
+          "data": {
+            "label": "Bureau Policy Decision",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "bureau_rule.credit_score",
+                "label": "Bureau Credit Score Rule"
+              },
+              {
+                "field": "bureau_rule.overdue_accounts",
+                "label": "Bureau Overdue Accounts Rule"
+              },
+              {
+                "field": "bureau_rule.loan_default_exists",
+                "label": "Bureau Loan Default Rule"
+              },
+              {
+                "field": "recommended_bureau_limit",
+                "label": "Recommended Bureau Limit"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "bureau_policy.result",
+                "label": "Bureau Credit Score Flag"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "fbcc524d-f7be-4bcc-ba09-6531aecf41d2",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"aa\""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "eda577ac-c4b2-41aa-9ec1-016f27417278",
+                "conditions": [
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "0"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"aa\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "608109b8-39dd-4426-81d8-2a412d45b1e3",
+                "conditions": [
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "type": "decisionTable",
+          "position": {
+            "x": 965,
+            "y": 1415
+          },
+          "data": {
+            "label": "Card Variant Selector",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "recommended_bureau_limit",
+                "label": "Recommended Bureau Limit"
+              },
+              {
+                "field": "customer.gender",
+                "label": "Customer Gender"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "card_variant",
+                "label": "Card Variant"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "< 25_000"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "null"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ">= 25_000 and <= 49_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "48fa817b-79fc-46e9-a9ba-bfedd67f7994",
+                "conditions": [
+                  {
+                    "expression": ">= 50_000 and <= 99_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "9c461ba2-beeb-4433-a41d-af502cb666ca",
+                "conditions": [
+                  {
+                    "expression": ">= 100_000 and <= 199_999"
+                  },
+                  {
+                    "expression": "'FEMALE'"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\", \"tiara\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "86f19d6b-ac3d-4808-8b4a-fc8ed4029f46",
+                "conditions": [
+                  {
+                    "expression": ">= 100_000 and <= 199_999"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "87173dc3-f735-4e46-ac75-b629d7d495a4",
+                "conditions": [
+                  {
+                    "expression": ">= 200_000"
+                  },
+                  {
+                    "expression": "'FEMALE'"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\", \"tiara\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "917b436d-120f-4156-8687-104727027a0f",
+                "conditions": [
+                  {
+                    "expression": ">= 200_000"
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"easy\", \"select\"]"
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "2a8e2459-95f9-47d1-a692-a0208fa5664c",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "62d28954-c265-4c0f-95cd-edc9496786a7",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2e06bd08-8c04-40b6-8688-3a1bf1690dab",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "51a6be84-62e6-4aa3-befe-bedea95ea967",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "bbb1cd9c-fe3a-4dea-a2b8-2e194e4cef08",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "6ed15155-43dd-433a-a758-439ae63017c1",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "383d4c69-f2ac-47c7-9a83-091a6b57ed3c",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "a92e7844-f3ac-49c5-bc7a-42808da5a946",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "95f946e0-0dff-40df-a0cb-29d94f575685",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d3367b18-5fa3-4f65-baeb-e6582712aa4c",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "1019cac3-1b68-486e-9cb5-9f50ad100fa1",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "ae64cb9d-c0bd-4b86-80bc-b66c3a921c91",
+          "source": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "5b7f04cd-c024-4316-8506-70e064598195",
+          "source": "74c2c7f4-2f4f-43d4-8aee-3c3514a62eda",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "507ee32e-158d-4e02-b9d6-488f28ee6627",
+          "source": "9edc55dc-95b6-4395-ab5f-ee27c4fe4d80",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "eb5028b0-38df-4416-b8c2-1f5279b70f35",
+          "source": "6a93f8ab-2389-4a60-8429-44f306c2dd8e",
+          "target": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2d16fd87-50e4-49dd-a1dd-1a01ef5a8805",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "9bfca942-594b-46e7-82db-6b98d690dfcc",
+          "source": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "4f238518-1ac0-4ba8-80a6-7647a68cf9f7",
+          "source": "a502cf2c-4808-4880-b8be-92fa92813241",
+          "target": "fd07fbff-d676-4432-940a-7e86aa2d98a8",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "dd23c04f-21eb-4a03-856a-071fd1e88219",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "1e4db60d-dde8-432a-9286-8c38ae7d9c68",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    },
+    {
+      "id": "b0dc9a93-838f-4307-a9c1-93db563cf624",
+      "name": "Imported Ruleset",
+      "description": "Imported from GoRules",
+      "status": "draft",
+      "createdAt": "2026-05-09T09:15:20.789Z",
+      "updatedAt": "2026-05-09T09:15:24.352Z",
+      "nodes": [
+        {
+          "id": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "type": "request",
+          "position": {
+            "x": -1050,
+            "y": 135
+          },
+          "data": {
+            "label": "Request"
+          }
+        },
+        {
+          "id": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "type": "response",
+          "position": {
+            "x": 1870,
+            "y": 20
+          },
+          "data": {
+            "label": "Response",
+            "outputFields": []
+          }
+        },
+        {
+          "id": "44cef779-6bb7-409b-9154-7f2dee0c0546",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 80
+          },
+          "data": {
+            "label": "Global Rule: Pincode",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.pincode",
+                "label": "Salaried Customer Pincode"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.pincode",
+                "label": "Global Rule: Pincode"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "not in [\"152132\", \"711303\", \"741404\", \"400612\", \"400043\", \"741222\", \"743263\", \"841248\", \"732216\", \"732215\", \"732210\", \"732209\", \"732208\", \"732207\", \"732206\", \"732205\", \"732204\", \"732203\", \"732202\", \"732201\", \"732151\", \"732149\", \"732148\", \"732144\", \"732142\", \"732141\", \"732140\", \"732139\", \"732138\", \"732128\", \"732127\", \"732126\", \"732125\", \"732124\", \"732123\", \"732122\", \"732121\", \"732103\", \"732102\", \"732101\"]"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "7a181b5c-77f9-46ae-a468-f5529738e71e",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 235
+          },
+          "data": {
+            "label": "Global Rule: Occupation",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.occupation",
+                "label": "Customer Occupation"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.occupation",
+                "label": "Global Rule: Occupation"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "not in [\"STUDENT\",\"HOUSEWIFE\",\"FARMER\",\"RETIRED\",\"OTHERS\"]"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "bfc76196-3ef8-477c-95a4-a6d7c8bad6b7",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "48e56b5a-f6f1-4a65-b456-c8ce7774e6cf",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 385
+          },
+          "data": {
+            "label": "Global Rule: Nationality",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.nationality",
+                "label": "Customer Nationality"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.nationality",
+                "label": "Global Rule: Nationality"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "\"INDIAN\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "6f876fcb-383a-4172-8f45-0daed96f61b7",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "10cc94fb-caee-45d1-8b99-c4bbbe26d057",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 525
+          },
+          "data": {
+            "label": "Global Rule: Annual Income",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.annual_income",
+                "label": "Customer Annual Income"
+              },
+              {
+                "field": "customer.occupation",
+                "label": "Customer Occupation"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.annual_income",
+                "label": "Global Rule: Annual Income"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": ">= 360_000"
+                  },
+                  {
+                    "expression": "\"SALARIED\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ">= 480_000"
+                  },
+                  {
+                    "expression": "\"SELF-EMPLOYED\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "4dcb475c-536e-4840-8931-8a000178d2f6",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b53260b0-8269-42e9-843b-0277912579be",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 655
+          },
+          "data": {
+            "label": "Global Rule: Credit Score",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.credit_score",
+                "label": "Customer Credit Score"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.credit_score",
+                "label": "Global Rule: Credit Score"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": ">= 700"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "2f2e0c07-4c29-4ed7-a93e-6adeaa8da878",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "96057f67-a8f7-461c-9555-a45f8ac21533",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 795
+          },
+          "data": {
+            "label": "Global Rule: Settled",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.settled_status",
+                "label": "Customer Settlement Amount Exists"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.settled",
+                "label": "Global Rule: Settled"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "dc0e0176-3640-4b99-8336-898522feed00",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "9303c489-f905-4670-a3d6-e24cf7b8c05e",
+          "type": "decisionTable",
+          "position": {
+            "x": -605,
+            "y": 1215
+          },
+          "data": {
+            "label": "Global Rule: DBR Check",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.dbr",
+                "label": "Customer DBR"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.dbr_check",
+                "label": "Global Rule: DBR Check"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "<= 0.4"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "704933f8-33f3-4432-83d0-9d2ee47a69ad",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "7720055b-053b-4d77-980e-e13a53d0db28",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": 1380
+          },
+          "data": {
+            "label": "Global Rule: CIBIL Detect",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer CIBIL Detect"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.cibil_detect",
+                "label": "Global Rule: CIBIL Detect"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "contains($,21)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "71cd9dc2-eef7-4c02-982a-826d16ac3cec",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "2701c3ce-8005-4784-835e-5ce365bd0ee6",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": 1530
+          },
+          "data": {
+            "label": "Global Rule: Suit Filed",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer Suit Filed"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.suit_filed",
+                "label": "Global Rule: Suit Filed"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "contains($,22)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "a3e6fb3f-bc9a-4f2c-9ba7-af4d7a5a6969",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "29049387-ba2a-47e6-bbd2-fbb1981cc63e",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": 1685
+          },
+          "data": {
+            "label": "Global Rule: Wilful Default",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer Wilful Default"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.wilful_default",
+                "label": "Global Rule: Wilful Default"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "contains($,23)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "7cf25cb4-8904-41cb-837b-1916699c1502",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "5c0e04ee-8c6d-4432-8744-92d111040375",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 1825
+          },
+          "data": {
+            "label": "Global Rule: Suit Filed + Wilful Default",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer Suit Filed + Wilful Default"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.suit_filed_wilful_default",
+                "label": "Global Rule: Suit Filed + Wilful Default"
+              }
+            ],
+            "rows": [
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": "contains($,24)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "303d38ce-63d1-4e7e-888a-f7be93840707",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "e3599ad1-462e-43bc-8d5b-520236f36e82",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": 1975
+          },
+          "data": {
+            "label": "Global Rule: Invalid PAN",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer Invalid PAN"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.invalid_pan",
+                "label": "Global Rule: Invalid PAN"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "contains($,26)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "b55255fd-09d7-4c77-a7f5-fa43acf31df7",
+                "conditions": [
+                  {
+                    "expression": "contains($,15)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8414b4b3-0309-4025-af25-4d6866fd4015",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "5e016ffe-dca9-4b62-9130-36ba1934deb4",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 2125
+          },
+          "data": {
+            "label": "Global Rule: Fake PAN",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.alertcode",
+                "label": "Customer Fake PAN"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.fake_pan",
+                "label": "Global Rule: Fake PAN"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "contains($,27)"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "07585bb7-ac87-4def-82bc-897c00a51199",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "1e374176-2320-42e2-b139-5c0a8307e523",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 935
+          },
+          "data": {
+            "label": "Global Rule: 90 DPD Active Loan",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.ninety_dpd_account_exists",
+                "label": "Customer 90 DPD Active Loan"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.ninety_dpd",
+                "label": "Global Rule: 90 DPD Active Loan"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "e3d16eb4-e6d4-43f7-9ebe-fd356dd32869",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "134afc6e-6b80-4b1a-8493-581a625fed19",
+          "type": "decisionTable",
+          "position": {
+            "x": -615,
+            "y": 1075
+          },
+          "data": {
+            "label": "Global Rule: Overdue Balance",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.overdue_balance",
+                "label": "Customer Overdue Balance"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.overdue_balance",
+                "label": "Global Rule: Overdue Balance"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "<= 1000"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "1b0fa16f-5001-4a16-9bb5-29e073ff6cea",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "a75a7b15-06cb-44d6-95ac-4d755e025cd4",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": 2280
+          },
+          "data": {
+            "label": "Global Rule: BOBCARD Dedupe",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.bobcard_dedupe_status",
+                "label": "Customer Dedupe"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.bobcard_dedupe_status",
+                "label": "Global Rule: BOBCARD Dedupe"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "55bc23ee-be23-49de-a8b8-da5161fd7899",
+                "conditions": [
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "e0e5fb3b-cd40-4f0c-8884-27702984fbbc",
+          "type": "decisionTable",
+          "position": {
+            "x": -610,
+            "y": -60
+          },
+          "data": {
+            "label": "Global Rule: Age",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.age",
+                "label": "Customer Age"
+              },
+              {
+                "field": "customer.occupation",
+                "label": "Customer Occupation"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_rule.age",
+                "label": "Global Rule: Age"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": ">= 21 and <=60"
+                  },
+                  {
+                    "expression": "\"SALARIED\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8f8612ab-8c07-4e24-89d4-a60ab5a8ab34",
+                "conditions": [
+                  {
+                    "expression": ">= 21 and <=65"
+                  },
+                  {
+                    "expression": "\"SELF-EMPLOYED\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "3508a376-e48a-4ba3-bece-4ebfff92b0fc",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "14192925-48c3-4b50-8a18-37035f57b690",
+          "type": "decisionTable",
+          "position": {
+            "x": -155,
+            "y": 200
+          },
+          "data": {
+            "label": "Global Policy Decision",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "global_rule.pincode",
+                "label": "Global Rule: Pincode"
+              },
+              {
+                "field": "global_rule.age",
+                "label": "Global Rule: Age"
+              },
+              {
+                "field": "global_rule.occupation",
+                "label": "Global Rule: Occupation"
+              },
+              {
+                "field": "global_rule.nationality",
+                "label": "Global Rule: Nationality"
+              },
+              {
+                "field": "global_rule.annual_income",
+                "label": "Global Rule: Annual Income"
+              },
+              {
+                "field": "global_rule.credit_score",
+                "label": "Global Rule: Credit Score"
+              },
+              {
+                "field": "global_rule.settled",
+                "label": "Global Rule: Settled"
+              },
+              {
+                "field": "global_rule.ninety_dpd",
+                "label": "Global Rule: 90 DPD Active Loan"
+              },
+              {
+                "field": "global_rule.overdue_balance",
+                "label": "Global Rule: Overdue Balance"
+              },
+              {
+                "field": "global_rule.dbr_check",
+                "label": "Global Rule: DBR"
+              },
+              {
+                "field": "global_rule.cibil_detect",
+                "label": "Global Rule: CIBIL Detect"
+              },
+              {
+                "field": "global_rule.suit_filed",
+                "label": "Global Rule: Suit Filed"
+              },
+              {
+                "field": "global_rule.wilful_default",
+                "label": "Global Rule: Wilful Default"
+              },
+              {
+                "field": "global_rule.suit_filed_wilful_default",
+                "label": "Global Rule: Suit Filed + Wilful Default"
+              },
+              {
+                "field": "global_rule.invalid_pan",
+                "label": "Global Rule: Invalid PAN"
+              },
+              {
+                "field": "global_rule.fake_pan",
+                "label": "Global Rule: Fake PAN"
+              },
+              {
+                "field": "global_rule.bobcard_dedupe_status",
+                "label": "Global Rule: BOBCARD Dedupe"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "global_policy.result",
+                "label": "Global Policy Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "ab0d019d-7a27-4e94-9381-dc803134c3f6",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "87d78412-3198-4bc5-b407-1d8a04a0bd0f",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "a05fb7d5-d90f-4899-aaa5-cf7f7723698d",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "f609f8ea-01f9-4df9-ae89-603c1f56b5c0",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "f5bd4c4e-ec52-4c5e-b2b9-aa42fc79588b",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "460ca7cb-c430-4aec-afc3-3b152bf094e8",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "7d8e8a37-6ac7-4c58-ab71-d9cc3b6b57eb",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "8753a43a-f236-4d3c-a790-6b5a48a6e630",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "bb1d2077-b0eb-4aec-a41d-9fb6f6a15a82",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "19584fc5-1538-4cbe-b67a-3b9144c8ee42",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "15953e7c-bbda-4d93-9578-0461548cd4e1",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "7c052519-94d7-4eac-a53a-4d0090b33953",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "02a4fcb1-02bd-41d3-bad6-8e89ec820645",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "b0d9c99d-914d-4016-a17d-7df8c03d492f",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "27600ac2-c195-4bba-8172-5778cf909ccd",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  },
+                  {
+                    "expression": ""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "ca458baf-1e78-4aae-b4b7-03c7920ce1f5",
+                "conditions": [
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": ""
+                  },
+                  {
+                    "expression": "\"reject\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"reject\""
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "629c261f-7bb7-4e9f-afa8-31c2e3f9e55a",
+                "conditions": [
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  },
+                  {
+                    "expression": "\"accept\""
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "\"accept\""
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "df7e0408-11d0-42e4-9308-9435e706c3b1",
+          "type": "decisionTable",
+          "position": {
+            "x": -620,
+            "y": 2420
+          },
+          "data": {
+            "label": "CPV",
+            "hitPolicy": "first",
+            "inputs": [
+              {
+                "field": "customer.aadhaar_validated",
+                "label": "Customer Aadhaar Validated"
+              },
+              {
+                "field": "customer.address_residence_score",
+                "label": "Customer Address Residence Score"
+              }
+            ],
+            "outputs": [
+              {
+                "field": "cpv.result",
+                "label": "CPV Result"
+              }
+            ],
+            "rows": [
+              {
+                "id": "b0d3fb26-0555-4ffa-8ad4-1c3dacab9c6a",
+                "conditions": [
+                  {
+                    "expression": "null"
+                  },
+                  {
+                    "expression": "null"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-refer\", \"address-refer\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "1fbb9b7c-7298-40b9-8dfe-34622dd9df8f",
+                "conditions": [
+                  {
+                    "expression": "null"
+                  },
+                  {
+                    "expression": "> 85"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-refer\", \"address-accept\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "4ec78fd3-c675-44e9-971a-b733743b2bb8",
+                "conditions": [
+                  {
+                    "expression": "true"
+                  },
+                  {
+                    "expression": "null"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-accept\", \"address-refer\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "cb994927-5d20-46a7-ae27-bf772b51202b",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  },
+                  {
+                    "expression": "<= 85"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-refer\", \"address-refer\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "55bc23ee-be23-49de-a8b8-da5161fd7899",
+                "conditions": [
+                  {
+                    "expression": "false"
+                  },
+                  {
+                    "expression": "> 85"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-refer\", \"address-accept\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "c0109b0e-9f8c-474f-8665-c0d4144fe297",
+                "conditions": [
+                  {
+                    "expression": "true"
+                  },
+                  {
+                    "expression": "<= 85"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"tele-accept\", \"address-refer\"]"
+                  }
+                ],
+                "annotation": ""
+              },
+              {
+                "id": "25083031-383a-4321-a6d4-a9c13560bfc2",
+                "conditions": [
+                  {
+                    "expression": "true"
+                  },
+                  {
+                    "expression": "> 85"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "value": "[\"accept\"]"
+                  }
+                ],
+                "annotation": ""
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e99e433d-1c89-4190-b5fd-c2b3115c5b50",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "44cef779-6bb7-409b-9154-7f2dee0c0546",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "801ecec6-7d30-49df-82e7-fe736853262b",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "e0e5fb3b-cd40-4f0c-8884-27702984fbbc",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "27897101-0d98-44c8-820f-b66e39099bbb",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "7a181b5c-77f9-46ae-a468-f5529738e71e",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "39a0e48b-6f61-4ccc-87f3-cca22b7f60d4",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "48e56b5a-f6f1-4a65-b456-c8ce7774e6cf",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "c93bfb25-75d5-464c-83a7-f8ca0d4c01ae",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "10cc94fb-caee-45d1-8b99-c4bbbe26d057",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "c1cc9ccb-3619-4f13-8ed1-cadb6fb3cc09",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "b53260b0-8269-42e9-843b-0277912579be",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "9f09110e-7ebe-4d89-93c4-14beb72a160d",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "96057f67-a8f7-461c-9555-a45f8ac21533",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "87ab8a66-345b-4c82-a67f-7b50418484db",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "1e374176-2320-42e2-b139-5c0a8307e523",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "f385bd6c-4546-4fb0-aeb4-beac0d9512df",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "134afc6e-6b80-4b1a-8493-581a625fed19",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "e060e673-32a7-4737-ae5f-838fca7bef44",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "9303c489-f905-4670-a3d6-e24cf7b8c05e",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "e56fb39f-fb4b-4771-a885-26f6b3f14304",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "7720055b-053b-4d77-980e-e13a53d0db28",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "c6b4a652-ca1f-41ac-9d1b-4065187e6010",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "2701c3ce-8005-4784-835e-5ce365bd0ee6",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "532ad0ba-c9e3-4f9a-9119-11622b6cc023",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "29049387-ba2a-47e6-bbd2-fbb1981cc63e",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "01432ffe-3258-45ac-8e7a-c892c4ec7821",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "5c0e04ee-8c6d-4432-8744-92d111040375",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "81788f8e-b7ad-4aea-9926-265350cfb5e6",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "e3599ad1-462e-43bc-8d5b-520236f36e82",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "ed5e89d3-62d1-49c0-b0b2-30a4e4eecc45",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "5e016ffe-dca9-4b62-9130-36ba1934deb4",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "256cc1c6-a270-4638-96cd-e7c47d351381",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "a75a7b15-06cb-44d6-95ac-4d755e025cd4",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "eab03de6-8c8d-497b-9c41-64db1b289098",
+          "source": "e0e5fb3b-cd40-4f0c-8884-27702984fbbc",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "0f4b1c7c-75f3-46bf-b4e9-bd346fe04d7c",
+          "source": "14192925-48c3-4b50-8a18-37035f57b690",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d94e5654-b42a-4d86-8b39-fc44c6939f41",
+          "source": "44cef779-6bb7-409b-9154-7f2dee0c0546",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "21655a11-13cb-4afe-9a43-3788d78a9c04",
+          "source": "7a181b5c-77f9-46ae-a468-f5529738e71e",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "a5af3543-b5ca-424c-8050-9cc34769c5a1",
+          "source": "48e56b5a-f6f1-4a65-b456-c8ce7774e6cf",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2ac5b5fa-b24e-435c-9bfa-66d966523e50",
+          "source": "10cc94fb-caee-45d1-8b99-c4bbbe26d057",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "c5addf11-e0aa-45f7-b522-9785b02acf3a",
+          "source": "b53260b0-8269-42e9-843b-0277912579be",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "3e942052-99e7-4ff0-b1d1-3f9c47bfd5b2",
+          "source": "96057f67-a8f7-461c-9555-a45f8ac21533",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "402d0e97-4666-47f6-8b5a-202a2e848a63",
+          "source": "1e374176-2320-42e2-b139-5c0a8307e523",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d579dc0e-0f2b-4f83-9bb0-2ddffdab7807",
+          "source": "134afc6e-6b80-4b1a-8493-581a625fed19",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2c025fb9-9237-4402-88e0-029993207401",
+          "source": "9303c489-f905-4670-a3d6-e24cf7b8c05e",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "275678d3-9426-4fec-8ec6-31590d2ef8f8",
+          "source": "7720055b-053b-4d77-980e-e13a53d0db28",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "33673ee8-4245-4ba6-8547-a809efb08a60",
+          "source": "2701c3ce-8005-4784-835e-5ce365bd0ee6",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "7b6a081d-c481-491e-b563-648caf58eb08",
+          "source": "29049387-ba2a-47e6-bbd2-fbb1981cc63e",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "5032dad5-0241-4797-b048-ed35b4d04a60",
+          "source": "5c0e04ee-8c6d-4432-8744-92d111040375",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "746dfeb7-6c96-45d1-bd31-6163f3d22a90",
+          "source": "e3599ad1-462e-43bc-8d5b-520236f36e82",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "0506628d-4396-47fa-a493-b786b7f2c6e7",
+          "source": "5e016ffe-dca9-4b62-9130-36ba1934deb4",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "b20e7111-b250-4d94-899f-4bc0d8df8e62",
+          "source": "a75a7b15-06cb-44d6-95ac-4d755e025cd4",
+          "target": "14192925-48c3-4b50-8a18-37035f57b690",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "c47a46d1-6fbc-4ec4-8407-d39fa0e9fd70",
+          "source": "e0e5fb3b-cd40-4f0c-8884-27702984fbbc",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "82c36d84-aad0-4a83-b015-d51488193c15",
+          "source": "44cef779-6bb7-409b-9154-7f2dee0c0546",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "9ea06016-2f35-468f-9954-ad3c23f0a957",
+          "source": "7a181b5c-77f9-46ae-a468-f5529738e71e",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d4f23fa1-10be-4015-8fbd-0f513450aa3d",
+          "source": "48e56b5a-f6f1-4a65-b456-c8ce7774e6cf",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "2ab4db14-6b94-41fc-81ad-9580ad628e79",
+          "source": "10cc94fb-caee-45d1-8b99-c4bbbe26d057",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "7d5591d8-1347-4c91-9848-e23a72acfc1c",
+          "source": "b53260b0-8269-42e9-843b-0277912579be",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "285f6075-7f0d-42a6-8831-fec824ee9faf",
+          "source": "96057f67-a8f7-461c-9555-a45f8ac21533",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "5ce8ced0-681b-486d-ba58-9a1918944124",
+          "source": "1e374176-2320-42e2-b139-5c0a8307e523",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "d830a486-c497-4b74-a2f9-984266b2ef6f",
+          "source": "134afc6e-6b80-4b1a-8493-581a625fed19",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "ddd983cd-7ff8-4b69-a133-7c702ef998e9",
+          "source": "9303c489-f905-4670-a3d6-e24cf7b8c05e",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "443d6dfa-3dda-474b-8f4a-e1f8e87dc75c",
+          "source": "7720055b-053b-4d77-980e-e13a53d0db28",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "31eb0757-ed30-4e91-b7c5-90828356c5d2",
+          "source": "2701c3ce-8005-4784-835e-5ce365bd0ee6",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "bf01241c-a30e-4bd9-8458-ec72ccb0964e",
+          "source": "29049387-ba2a-47e6-bbd2-fbb1981cc63e",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "811bac2f-ec9a-4daf-b136-9a5cde3c9985",
+          "source": "5c0e04ee-8c6d-4432-8744-92d111040375",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "29f87e86-312b-4231-9ea9-4489fbec3310",
+          "source": "e3599ad1-462e-43bc-8d5b-520236f36e82",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "4b97d25e-b0e4-4eb8-aa9f-f0d48e952a02",
+          "source": "5e016ffe-dca9-4b62-9130-36ba1934deb4",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "dbc62bca-e17c-403b-9e08-6ddd96a28a17",
+          "source": "a75a7b15-06cb-44d6-95ac-4d755e025cd4",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "9f02e802-1b19-46cf-9456-478ba905ea6b",
+          "source": "4e7e6bb9-f128-41e7-8cc5-b9d79670b96a",
+          "target": "df7e0408-11d0-42e4-9308-9435e706c3b1",
+          "sourceHandle": null,
+          "targetHandle": null
+        },
+        {
+          "id": "38c4d6b3-1344-45dc-8740-0c3d776f607d",
+          "source": "df7e0408-11d0-42e4-9308-9435e706c3b1",
+          "target": "95aa8f3c-f371-4e48-beb3-0b5775d2a814",
+          "sourceHandle": null,
+          "targetHandle": null
+        }
+      ]
+    }
+  ]
+}
