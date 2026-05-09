@@ -92,6 +92,7 @@ export default function Dashboard() {
     if (!file) return;
     const text = await file.text();
     const data = JSON.parse(text);
+    if (!data.name) data.name = file.name.replace(/\.json$/i, '');
     await api.importRuleset(data);
     load();
     e.target.value = '';
