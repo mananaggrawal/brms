@@ -20,17 +20,33 @@ const vm = require('vm');
  *   "22"                  → numeric/string equality
  *   ""                    → null (wildcard — matches anything)
  */
+// Strip numeric underscore separators: "25_000" → "25000"
+function stripNumericUnderscores(s) {
+  return typeof s === 'string' ? s.replace(/(\d)_(\d)/g, '$1$2') : s;
+}
+
 function parseInlineExpression(expr) {
   if (!expr || !expr.trim()) return null; // wildcard
 
   const t = expr.trim();
 
-  // Full expression: "field.path operator value"  e.g. "customer.age = 22", "customer.age > 40"
+  // Compound: "op val and op val" — e.g., ">= 25_000 and <= 200_000"
+  // Split only on " and " surrounded by spaces to avoid clashing with field names
+  const andIdx = t.search(/\s+and\s+/i);
+  if (andIdx !== -1) {
+    const leftStr  = t.slice(0, andIdx).trim();
+    const rightStr = t.slice(andIdx).replace(/^\s+and\s+/i, '').trim();
+    const left  = parseInlineExpression(leftStr);
+    const right = parseInlineExpression(rightStr);
+    if (left && right) return { compound: [left, right] };
+  }
+
+  // Full expression: "field.path operator value"  e.g. "customer.age = 22"
   const fullExprMatch = t.match(/^([\w.[\]]+)\s*(>=|<=|!=|<>|>|<|===?|==?)\s*(.*)$/);
   if (fullExprMatch && fullExprMatch[1].includes('.')) {
     const field = fullExprMatch[1];
     const rawOp = fullExprMatch[2];
-    const val   = fullExprMatch[3].trim();
+    const val   = stripNumericUnderscores(fullExprMatch[3].trim());
     const op    = rawOp === '<>' ? '!=' : (rawOp === '=' ? '==' : rawOp);
     return { op, val, overrideField: field };
   }
@@ -39,7 +55,7 @@ function parseInlineExpression(expr) {
   const opMatch = t.match(/^(>=|<=|!=|<>|>|<|===?)\s*(.*)$/);
   if (opMatch) {
     const op  = opMatch[1] === '<>' ? '!=' : (opMatch[1] === '=' ? '==' : opMatch[1]);
-    const raw = opMatch[2].trim();
+    const raw = stripNumericUnderscores(opMatch[2].trim());
     return { op, val: raw };
   }
 
@@ -55,8 +71,9 @@ function parseInlineExpression(expr) {
     return { op: '==', val: t.slice(1, -1) };
   }
 
-  // Numeric literal
-  if (!isNaN(Number(t))) return { op: '==', val: t };
+  // Numeric literal (strip underscores first)
+  const tClean = stripNumericUnderscores(t);
+  if (!isNaN(Number(tClean))) return { op: '==', val: tClean };
 
   // Default: equality against the raw string
   return { op: '==', val: t };
@@ -64,6 +81,11 @@ function parseInlineExpression(expr) {
 
 function matchInlineExpression(parsed, fieldValue) {
   if (!parsed) return true; // wildcard
+
+  // Compound AND — e.g. ">= 25000 and <= 200000"
+  if (parsed.compound) {
+    return parsed.compound.every(p => matchInlineExpression(p, fieldValue));
+  }
 
   const { op, val, literal } = parsed;
 
@@ -198,6 +220,29 @@ async function executeDecisionTable(nodeData, context) {
       outputs.forEach((output, i) => {
         const outVal = row.outputs?.[i]?.value;
         if (outVal !== undefined && outVal !== null && outVal !== '') {
+          // If the output value looks like a field path (bare dotted identifier, no quotes/operators),
+          // resolve it from the current context rather than writing it as a literal string.
+          const isBareFieldRef = typeof outVal === 'string'
+            && /^[a-zA-Z_][a-zA-Z0-9_.]*$/.test(outVal.trim())
+            && outVal.trim() !== 'true'
+            && outVal.trim() !== 'false'
+            && outVal.trim() !== 'null';
+          if (isBareFieldRef) {
+            const resolved = getNestedValue(context, outVal.trim());
+            if (resolved !== undefined) {
+              // Write the resolved value directly — bypass setNestedValue's string parsing
+              const parts = output.field.split('.');
+              const last = parts.pop();
+              let target = context;
+              for (const k of parts) {
+                if (typeof target[k] !== 'object' || target[k] === null) target[k] = {};
+                target = target[k];
+              }
+              target[last] = resolved;
+              rowOutputs[output.field] = resolved;
+              return;
+            }
+          }
           setNestedValue(context, output.field, outVal);
           rowOutputs[output.field] = outVal;
         }
