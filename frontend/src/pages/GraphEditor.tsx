@@ -178,6 +178,55 @@ function makeDefaultData(type: NodeType): AnyNodeData {
   }
 }
 
+// ── Sample input helpers ──────────────────────────────────────────────────────
+
+function setNestedDefault(obj: Record<string, unknown>, path: string, value: unknown) {
+  const parts = path.split('.');
+  let cur: Record<string, unknown> = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (typeof cur[parts[i]] !== 'object' || cur[parts[i]] === null) cur[parts[i]] = {};
+    cur = cur[parts[i]] as Record<string, unknown>;
+  }
+  const last = parts[parts.length - 1];
+  if (!(last in cur)) cur[last] = value;
+}
+
+function buildSampleInput(nodes: Node[]): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const node of nodes) {
+    if (node.type === 'decisionTable') {
+      const data = node.data as unknown as DecisionTableData;
+      for (const col of data.inputs ?? []) {
+        if (col.field) setNestedDefault(result, col.field, 0);
+      }
+    }
+  }
+  return result;
+}
+
+function deepMergeDefaults(
+  target: Record<string, unknown>,
+  defaults: Record<string, unknown>,
+): Record<string, unknown> {
+  const result = { ...target };
+  for (const key of Object.keys(defaults)) {
+    if (!(key in result)) {
+      result[key] = defaults[key];
+    } else if (
+      typeof result[key] === 'object' && result[key] !== null && !Array.isArray(result[key]) &&
+      typeof defaults[key] === 'object' && defaults[key] !== null && !Array.isArray(defaults[key])
+    ) {
+      result[key] = deepMergeDefaults(
+        result[key] as Record<string, unknown>,
+        defaults[key] as Record<string, unknown>,
+      );
+    }
+  }
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function GraphEditor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -210,8 +259,13 @@ export default function GraphEditor() {
     api.getRuleset(id).then(rs => {
       setRuleset(rs);
       setNameValue(rs.name);
-      setNodes(rs.nodes.map(n => ({ id: n.id, type: n.type, position: n.position, data: n.data as unknown as Record<string, unknown> })));
+      const loadedNodes = rs.nodes.map(n => ({ id: n.id, type: n.type, position: n.position, data: n.data as unknown as Record<string, unknown> }));
+      setNodes(loadedNodes);
       setEdges(rs.edges.map(e => ({ id: e.id, source: e.source, target: e.target, sourceHandle: e.sourceHandle || null, targetHandle: e.targetHandle || null })));
+      const sample = buildSampleInput(loadedNodes);
+      if (Object.keys(sample).length > 0) {
+        setSimulatorInput(JSON.stringify(sample, null, 2));
+      }
     });
   }, [id]);
 
@@ -230,6 +284,19 @@ export default function GraphEditor() {
         edges: edgesRef.current.map(e => ({ id: e.id, source: e.source, target: e.target, sourceHandle: e.sourceHandle, targetHandle: e.targetHandle })),
       });
       setSaved(true);
+      // Merge any newly added input fields into the simulator input without wiping user values
+      const sample = buildSampleInput(nodesRef.current);
+      if (Object.keys(sample).length > 0) {
+        setSimulatorInput(prev => {
+          try {
+            const current = JSON.parse(prev);
+            const merged = deepMergeDefaults(current, sample);
+            return JSON.stringify(merged, null, 2);
+          } catch {
+            return JSON.stringify(sample, null, 2);
+          }
+        });
+      }
     } finally {
       setSaving(false);
     }
