@@ -274,13 +274,20 @@ async function executeFunction(nodeData, context) {
   `;
 
   const logs = [];
+  const fmtArg = a => {
+    if (a === null) return 'null';
+    if (typeof a === 'string') return a;
+    if (typeof a === 'object' || Array.isArray(a)) { try { return JSON.stringify(a); } catch { return String(a); } }
+    return String(a);
+  };
   const sandbox = {
     __input: JSON.parse(JSON.stringify(context)),
     __result: Promise.resolve({}),
     console: {
-      log: (...args) => logs.push(args.map(String).join(' ')),
-      error: (...args) => logs.push('[ERROR] ' + args.map(String).join(' ')),
-      warn: (...args) => logs.push('[WARN] ' + args.map(String).join(' ')),
+      log:   (...args) => logs.push(args.map(fmtArg).join(' ')),
+      error: (...args) => logs.push('[ERROR] ' + args.map(fmtArg).join(' ')),
+      warn:  (...args) => logs.push('[WARN] '  + args.map(fmtArg).join(' ')),
+      info:  (...args) => logs.push(args.map(fmtArg).join(' ')),
     },
     Math, JSON, Date, parseInt, parseFloat, isNaN, isFinite,
     Number, String, Boolean, Array, Object, Promise,
