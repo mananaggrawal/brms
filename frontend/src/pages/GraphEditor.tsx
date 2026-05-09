@@ -237,8 +237,15 @@ export default function GraphEditor() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [showSimulator, setShowSimulator] = useState(false);
   const [simulatorInput, setSimulatorInput] = useState('{\n  \n}');
-  const [activeRightTab, setActiveRightTab] = useState<'node' | 'simulator'>('node');
+  const [simulatorHeight, setSimulatorHeight] = useState(360);
+  const [rightPanelWidth, setRightPanelWidth] = useState(400);
   const [nodeConsoleLogs, setNodeConsoleLogs] = useState<Record<string, string[]>>({});
+  const simResizingRef = useRef(false);
+  const simResizeStartY = useRef(0);
+  const simResizeStartH = useRef(360);
+  const rightResizingRef = useRef(false);
+  const rightResizeStartX = useRef(0);
+  const rightResizeStartW = useRef(400);
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [saved, setSaved] = useState(true);
@@ -316,8 +323,37 @@ export default function GraphEditor() {
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedNodeId(node.id);
-    setActiveRightTab('node');
+    const defaultW: Record<string, number> = { decisionTable: 640, function: 560, expression: 520 };
+    setRightPanelWidth(defaultW[node.type as string] || 400);
   }, []);
+
+  const onSimResizeMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    simResizingRef.current = true;
+    simResizeStartY.current = e.clientY;
+    simResizeStartH.current = simulatorHeight;
+    const onMove = (ev: MouseEvent) => {
+      if (!simResizingRef.current) return;
+      setSimulatorHeight(Math.max(240, Math.min(720, simResizeStartH.current + simResizeStartY.current - ev.clientY)));
+    };
+    const onUp = () => { simResizingRef.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [simulatorHeight]);
+
+  const onRightResizeMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    rightResizingRef.current = true;
+    rightResizeStartX.current = e.clientX;
+    rightResizeStartW.current = rightPanelWidth;
+    const onMove = (ev: MouseEvent) => {
+      if (!rightResizingRef.current) return;
+      setRightPanelWidth(Math.max(260, Math.min(900, rightResizeStartW.current + rightResizeStartX.current - ev.clientX)));
+    };
+    const onUp = () => { rightResizingRef.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [rightPanelWidth]);
 
   const onPaneClick = useCallback(() => {
     setSelectedNodeId(null);
@@ -570,13 +606,8 @@ export default function GraphEditor() {
 
         <button
           onClick={() => {
-            if (showSimulator && activeRightTab === 'simulator') {
-              handleSimulationResult(null);
-              setShowSimulator(false);
-            } else {
-              setShowSimulator(true);
-              setActiveRightTab('simulator');
-            }
+            if (showSimulator) { handleSimulationResult(null); setShowSimulator(false); }
+            else setShowSimulator(true);
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg transition-colors font-medium ${showSimulator ? 'bg-brand-500 text-white border-brand-500' : 'text-brand-500 border-brand-200 hover:bg-brand-50'}`}
         >
@@ -661,78 +692,47 @@ export default function GraphEditor() {
             </ReactFlow>
           </div>
 
-          {/* Right panel — node editor + simulator as tabs */}
-          {(selectedNode || showSimulator) && (
+          {/* Right panel — node editor */}
+          {selectedNode && (
             <div
+              className="bg-white border-l border-slate-200 flex flex-col flex-shrink-0 relative"
+              style={{ width: rightPanelWidth }}
               onKeyDown={e => e.stopPropagation()}
-              className={`bg-white border-l border-slate-200 flex flex-col flex-shrink-0 ${
-                activeRightTab === 'node' && selectedNode?.type === 'decisionTable' ? 'w-[640px]'
-                : activeRightTab === 'node' && (selectedNode?.type === 'function' || selectedNode?.type === 'expression') ? 'w-[560px]'
-                : 'w-[420px]'
-              }`}
             >
-              {/* Tab bar */}
-              <div className="flex items-center border-b border-slate-200 bg-slate-50 flex-shrink-0">
-                {selectedNode && (
-                  <button
-                    onClick={() => setActiveRightTab('node')}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
-                      activeRightTab === 'node'
-                        ? 'border-brand-500 text-brand-600 bg-white'
-                        : 'border-transparent text-slate-500 hover:text-slate-700'
-                    }`}
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    Node
-                  </button>
-                )}
-                {showSimulator && (
-                  <button
-                    onClick={() => setActiveRightTab('simulator')}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
-                      activeRightTab === 'simulator'
-                        ? 'border-brand-500 text-brand-600 bg-white'
-                        : 'border-transparent text-slate-500 hover:text-slate-700'
-                    }`}
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Simulator
-                  </button>
-                )}
-                <div className="flex-1" />
-                {/* Close the active panel */}
-                <button
-                  onClick={() => {
-                    if (activeRightTab === 'node') {
-                      setSelectedNodeId(null);
-                      if (showSimulator) setActiveRightTab('simulator');
-                    } else {
-                      handleSimulationResult(null);
-                      setShowSimulator(false);
-                      if (selectedNode) setActiveRightTab('node');
-                    }
-                  }}
-                  className="px-3 py-2.5 text-slate-400 hover:text-slate-600 transition-colors"
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-              </div>
-
-              {/* Tab content */}
+              {/* Left-edge resize handle */}
+              <div
+                className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize z-20 hover:bg-brand-300 transition-colors"
+                onMouseDown={onRightResizeMouseDown}
+              />
               <div className="flex-1 min-h-0 overflow-hidden">
-                {activeRightTab === 'node' && renderPanel()}
-                {activeRightTab === 'simulator' && (
-                  <Simulator
-                    rulesetId={id!}
-                    inputJson={simulatorInput}
-                    onInputChange={setSimulatorInput}
-                    onResult={handleSimulationResult}
-                  />
-                )}
+                {renderPanel()}
               </div>
             </div>
           )}
         </div>
+
+        {/* Bottom simulator panel */}
+        {showSimulator && (
+          <div
+            className="flex-shrink-0 bg-white border-t border-slate-200 flex flex-col"
+            style={{ height: simulatorHeight }}
+          >
+            {/* Top resize handle */}
+            <div
+              className="h-1.5 flex-shrink-0 bg-slate-100 hover:bg-brand-200 cursor-row-resize transition-colors"
+              onMouseDown={onSimResizeMouseDown}
+            />
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <Simulator
+                rulesetId={id!}
+                onClose={() => { handleSimulationResult(null); setShowSimulator(false); }}
+                inputJson={simulatorInput}
+                onInputChange={setSimulatorInput}
+                onResult={handleSimulationResult}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
