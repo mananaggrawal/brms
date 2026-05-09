@@ -237,7 +237,7 @@ export default function GraphEditor() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [showSimulator, setShowSimulator] = useState(false);
   const [simulatorInput, setSimulatorInput] = useState('{\n  \n}');
-  const [simulatorHeight, setSimulatorHeight] = useState(320);
+  const [simulatorHeight, setSimulatorHeight] = useState(360);
   const resizingRef = useRef(false);
   const resizeStartY = useRef(0);
   const resizeStartH = useRef(320);
@@ -406,7 +406,7 @@ export default function GraphEditor() {
     const onMove = (ev: MouseEvent) => {
       if (!resizingRef.current) return;
       const delta = resizeStartY.current - ev.clientY;
-      setSimulatorHeight(Math.max(200, Math.min(700, resizeStartH.current + delta)));
+      setSimulatorHeight(Math.max(260, Math.min(700, resizeStartH.current + delta)));
     };
     const onUp = () => { resizingRef.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
     window.addEventListener('mousemove', onMove);

@@ -28,17 +28,15 @@ function TraceNode({ entry }: { entry: TraceEntry }) {
   return (
     <div className={`border rounded-lg overflow-hidden ${entry.error ? 'border-red-200' : entry.skipped ? 'border-slate-200 opacity-60' : 'border-slate-200'}`}>
       <button
-        className="w-full flex items-center gap-3 px-3 py-2.5 bg-white hover:bg-slate-50 text-left"
+        className="w-full flex items-center gap-3 px-3 py-2 bg-white hover:bg-slate-50 text-left"
         onClick={() => hasDetails && setExpanded(e => !e)}
       >
-        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${colorClass}`}>{entry.nodeType}</span>
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${colorClass}`}>{entry.nodeType}</span>
         <span className="text-sm font-medium text-slate-700 flex-1 truncate">{entry.nodeLabel}</span>
-        {entry.error && <span className="text-xs text-red-500 font-medium">Error</span>}
-        {entry.skipped && <span className="text-xs text-slate-400">Skipped</span>}
-        {entry.duration !== undefined && <span className="text-xs text-slate-400">{entry.duration}ms</span>}
-        {hasDetails && (
-          <span className="text-slate-400 text-xs">{expanded ? '▲' : '▼'}</span>
-        )}
+        {entry.error && <span className="text-xs text-red-500 font-medium shrink-0">Error</span>}
+        {entry.skipped && <span className="text-xs text-slate-400 shrink-0">Skipped</span>}
+        {entry.duration !== undefined && <span className="text-xs text-slate-400 shrink-0">{entry.duration}ms</span>}
+        {hasDetails && <span className="text-slate-400 text-xs shrink-0">{expanded ? '▲' : '▼'}</span>}
       </button>
 
       {expanded && (
@@ -46,12 +44,9 @@ function TraceNode({ entry }: { entry: TraceEntry }) {
           {entry.error && (
             <div className="text-xs text-red-600 bg-red-50 rounded p-2 font-mono">{entry.error}</div>
           )}
-
           {entry.matchedRows !== undefined && (
             <div>
-              <div className="text-xs font-semibold text-slate-500 mb-1">
-                Matched rows: {entry.matchedRows.length}
-              </div>
+              <div className="text-xs font-semibold text-slate-500 mb-1">Matched rows: {entry.matchedRows.length}</div>
               {entry.matchedRows.map((mr, i) => (
                 <div key={i} className="text-xs font-mono bg-white border border-slate-200 rounded p-2 mb-1">
                   {Object.entries(mr.outputs).map(([k, v]) => (
@@ -64,28 +59,22 @@ function TraceNode({ entry }: { entry: TraceEntry }) {
               )}
             </div>
           )}
-
           {entry.expressionResult !== undefined && (
             <div className="text-xs">
               Expression: <span className={`font-medium ${entry.expressionResult ? 'text-green-600' : 'text-red-600'}`}>{String(entry.expressionResult)}</span>
             </div>
           )}
-
           {entry.matchedPort && (
-            <div className="text-xs">
-              Routed to: <span className="font-mono font-medium text-rose-600">{entry.matchedPort}</span>
-            </div>
+            <div className="text-xs">Routed to: <span className="font-mono font-medium text-rose-600">{entry.matchedPort}</span></div>
           )}
-
           {entry.logs?.length ? (
             <div>
               <div className="text-xs font-semibold text-slate-500 mb-1">Console</div>
               {entry.logs.map((l, i) => (
-                <div key={i} className="text-xs font-mono text-slate-600 bg-slate-800 text-green-400 rounded px-2 py-0.5">{l}</div>
+                <div key={i} className="text-xs font-mono bg-slate-800 text-green-400 rounded px-2 py-0.5">{l}</div>
               ))}
             </div>
           ) : null}
-
           {entry.contextSnapshot && (
             <details>
               <summary className="text-xs font-semibold text-slate-500 cursor-pointer hover:text-slate-700">Context snapshot</summary>
@@ -125,38 +114,42 @@ export default function Simulator({ rulesetId, onClose, inputJson, onInputChange
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-slate-200 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f6ef7" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f6ef7" strokeWidth="2.5">
             <polygon points="5 3 19 12 5 21 5 3"/>
           </svg>
           <span className="font-semibold text-slate-800 text-sm">Simulator</span>
         </div>
-        <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded hover:bg-slate-100 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
 
-      <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Input */}
-        <div className="flex flex-col" style={{ height: '40%' }}>
-          <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-slate-100">
+      {/* Side-by-side body */}
+      <div className="flex flex-1 min-h-0">
+
+        {/* LEFT: Input */}
+        <div className="flex flex-col w-2/5 min-w-0 border-r border-slate-200">
+          <div className="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-100 flex-shrink-0">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Input JSON</span>
             <button
               onClick={run}
               disabled={loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-brand-500 text-white rounded-lg hover:bg-brand-600 disabled:opacity-60 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-brand-500 text-white rounded-lg hover:bg-brand-600 disabled:opacity-60 transition-colors"
             >
               {loading ? (
-                <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <svg className="animate-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
               ) : (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               )}
-              {loading ? 'Running...' : 'Run'}
+              {loading ? 'Running…' : 'Run'}
             </button>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-h-0">
             <Editor
               height="100%"
               defaultLanguage="json"
@@ -169,46 +162,55 @@ export default function Simulator({ rulesetId, onClose, inputJson, onInputChange
                 lineNumbers: 'off',
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
-                padding: { top: 8 },
+                padding: { top: 8, bottom: 8 },
                 wordWrap: 'on',
+                folding: false,
               }}
             />
           </div>
         </div>
 
-        {/* Results */}
-        <div className="flex flex-col flex-1 overflow-hidden border-t border-slate-200">
-          <div className="flex items-center gap-1 px-4 pt-2 bg-slate-50 border-b border-slate-100">
+        {/* RIGHT: Results */}
+        <div className="flex flex-col flex-1 min-w-0 min-h-0">
+          {/* Tabs */}
+          <div className="flex items-center gap-0 px-4 bg-slate-50 border-b border-slate-100 flex-shrink-0">
             {(['output', 'trace', 'context'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-t capitalize transition-colors ${activeTab === tab ? 'text-brand-500 border-b-2 border-brand-500' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`px-3 py-2.5 text-xs font-medium capitalize border-b-2 transition-colors ${
+                  activeTab === tab
+                    ? 'text-brand-500 border-brand-500'
+                    : 'text-slate-500 border-transparent hover:text-slate-700'
+                }`}
               >
                 {tab}
                 {tab === 'trace' && result && (
-                  <span className="ml-1 text-xs bg-slate-200 rounded-full px-1.5">{result.trace.length}</span>
+                  <span className="ml-1.5 text-xs bg-slate-200 text-slate-600 rounded-full px-1.5 py-0.5 font-medium">{result.trace.length}</span>
                 )}
               </button>
             ))}
           </div>
 
-          <div className="flex-1 overflow-auto p-4">
+          {/* Tab content — this is the only scrolling region */}
+          <div className="flex-1 overflow-y-auto p-4 min-h-0">
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{error}</div>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600 mb-3">{error}</div>
             )}
 
             {!result && !error && (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400 text-sm">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-2 opacity-40"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                Enter JSON input and click Run
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 text-sm select-none">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-2 opacity-30">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span className="text-xs">Enter JSON and click Run</span>
               </div>
             )}
 
             {result && activeTab === 'output' && (
               <div>
-                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Output</div>
-                <pre className="text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 overflow-auto">
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Output</div>
+                <pre className="text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 whitespace-pre-wrap break-all">
                   {JSON.stringify(result.output, null, 2)}
                 </pre>
               </div>
@@ -224,8 +226,8 @@ export default function Simulator({ rulesetId, onClose, inputJson, onInputChange
 
             {result && activeTab === 'context' && (
               <div>
-                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Full Context</div>
-                <pre className="text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 overflow-auto">
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Full Context</div>
+                <pre className="text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 whitespace-pre-wrap break-all">
                   {JSON.stringify(result.context, null, 2)}
                 </pre>
               </div>
