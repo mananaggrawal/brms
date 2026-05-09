@@ -12,15 +12,25 @@ app.use(express.json({ limit: '50mb' }));
 const DATA_FILE = path.join(__dirname, 'data', 'rulesets.json');
 
 function readData() {
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-    fs.writeFileSync(DATA_FILE, JSON.stringify({ rulesets: [] }));
+  try {
+    if (!fs.existsSync(DATA_FILE)) {
+      fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+      fs.writeFileSync(DATA_FILE, JSON.stringify({ rulesets: [] }));
+    }
+    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+  } catch (err) {
+    console.error('readData error:', err.message);
+    return { rulesets: [] };
   }
-  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 }
 
 function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error('writeData error:', err.message);
+    throw new Error('Failed to persist data: ' + err.message);
+  }
 }
 
 // List rulesets (summary)

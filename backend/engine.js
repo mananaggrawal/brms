@@ -103,7 +103,7 @@ function getNestedValue(obj, path) {
 }
 
 function setNestedValue(obj, path, rawValue) {
-  if (!path) return;
+  if (!path || typeof path !== 'string') return;
   const keys = path.split('.');
   const last = keys.pop();
   let target = obj;
@@ -346,6 +346,11 @@ function topologicalSort(nodes, edges) {
     }
   }
 
+  if (sorted.length < nodes.length) {
+    const cycleIds = nodes.filter(n => !sorted.includes(n.id)).map(n => n.id);
+    throw new Error(`Cycle detected in graph involving nodes: ${cycleIds.join(', ')}`);
+  }
+
   return sorted.map(id => nodes.find(n => n.id === id)).filter(Boolean);
 }
 
@@ -401,9 +406,10 @@ async function executeRuleset(ruleset, input) {
           entry.contextSnapshot = JSON.parse(JSON.stringify(context));
 
           // Skip downstream nodes not on any matched port
+          // null sourceHandle means the edge isn't port-gated (always passes through)
           const outEdges = edges.filter(e => e.source === node.id);
           for (const e of outEdges) {
-            const portMatched = res.matchedPorts.includes(e.sourceHandle);
+            const portMatched = e.sourceHandle === null || e.sourceHandle === undefined || res.matchedPorts.includes(e.sourceHandle);
             if (!portMatched) {
               skippedNodes.add(e.target);
             }

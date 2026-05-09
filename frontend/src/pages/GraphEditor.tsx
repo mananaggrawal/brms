@@ -91,6 +91,17 @@ function convertToGoRules(rs: Ruleset) {
         content = { expression: ex.expression || '', outputField: ex.outputField || '' };
         break;
       }
+
+      case 'switch': {
+        const sw = d as SwitchData;
+        const statements = (sw.branches || []).map(b => ({
+          id: b.port,
+          condition: b.expression || '',
+          isDefault: b.isElse ?? false,
+        }));
+        content = { hitPolicy: sw.hitPolicy || 'first', statements };
+        break;
+      }
     }
 
     return {
