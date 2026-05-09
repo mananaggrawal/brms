@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const { Pool } = require('pg');
 const path = require('path');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { executeRuleset } = require('./engine');
 
@@ -9,106 +10,135 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
-const DATA_FILE = path.join(__dirname, 'data', 'rulesets.json');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost')
+    ? { rejectUnauthorized: false }
+    : false,
+});
 
-function readData() {
-  try {
-    if (!fs.existsSync(DATA_FILE)) {
-      fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-      fs.writeFileSync(DATA_FILE, JSON.stringify({ rulesets: [] }));
-    }
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-  } catch (err) {
-    console.error('readData error:', err.message);
-    return { rulesets: [] };
-  }
+async function initDb() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS rulesets (
+      id TEXT PRIMARY KEY,
+      data JSONB NOT NULL
+    )
+  `);
 }
 
-function writeData(data) {
-  try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error('writeData error:', err.message);
-    throw new Error('Failed to persist data: ' + err.message);
-  }
+async function getRulesets() {
+  const { rows } = await pool.query('SELECT data FROM rulesets ORDER BY (data->>\'createdAt\') ASC');
+  return rows.map(r => r.data);
+}
+
+async function getRuleset(id) {
+  const { rows } = await pool.query('SELECT data FROM rulesets WHERE id = $1', [id]);
+  return rows[0]?.data || null;
+}
+
+async function saveRuleset(rs) {
+  await pool.query(
+    'INSERT INTO rulesets (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2',
+    [rs.id, rs]
+  );
+}
+
+async function deleteRuleset(id) {
+  await pool.query('DELETE FROM rulesets WHERE id = $1', [id]);
 }
 
 // List rulesets (summary)
-app.get('/api/rulesets', (req, res) => {
-  const { rulesets } = readData();
-  res.json(rulesets.map(r => ({
-    id: r.id, name: r.name, description: r.description,
-    status: r.status, createdAt: r.createdAt, updatedAt: r.updatedAt,
-    nodeCount: r.nodes?.length || 0,
-  })));
+app.get('/api/rulesets', async (req, res) => {
+  try {
+    const rulesets = await getRulesets();
+    res.json(rulesets.map(r => ({
+      id: r.id, name: r.name, description: r.description,
+      status: r.status, createdAt: r.createdAt, updatedAt: r.updatedAt,
+      nodeCount: r.nodes?.length || 0,
+    })));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Get single ruleset (full)
-app.get('/api/rulesets/:id', (req, res) => {
-  const { rulesets } = readData();
-  const rs = rulesets.find(r => r.id === req.params.id);
-  if (!rs) return res.status(404).json({ error: 'Not found' });
-  res.json(rs);
+app.get('/api/rulesets/:id', async (req, res) => {
+  try {
+    const rs = await getRuleset(req.params.id);
+    if (!rs) return res.status(404).json({ error: 'Not found' });
+    res.json(rs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Create ruleset
-app.post('/api/rulesets', (req, res) => {
-  const data = readData();
-  const rs = {
-    id: uuidv4(),
-    name: req.body.name || 'Untitled Ruleset',
-    description: req.body.description || '',
-    status: 'draft',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    nodes: [
-      { id: 'node-request', type: 'request', position: { x: 60, y: 220 }, data: { label: 'Request' } },
-      { id: 'node-response', type: 'response', position: { x: 760, y: 220 }, data: { label: 'Response', outputFields: [] } },
-    ],
-    edges: [],
-  };
-  data.rulesets.push(rs);
-  writeData(data);
-  res.status(201).json(rs);
+app.post('/api/rulesets', async (req, res) => {
+  try {
+    const rs = {
+      id: uuidv4(),
+      name: req.body.name || 'Untitled Ruleset',
+      description: req.body.description || '',
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      nodes: [
+        { id: 'node-request', type: 'request', position: { x: 60, y: 220 }, data: { label: 'Request' } },
+        { id: 'node-response', type: 'response', position: { x: 760, y: 220 }, data: { label: 'Response', outputFields: [] } },
+      ],
+      edges: [],
+    };
+    await saveRuleset(rs);
+    res.status(201).json(rs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Update ruleset (graph + metadata)
-app.put('/api/rulesets/:id', (req, res) => {
-  const data = readData();
-  const idx = data.rulesets.findIndex(r => r.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  data.rulesets[idx] = { ...data.rulesets[idx], ...req.body, id: req.params.id, updatedAt: new Date().toISOString() };
-  writeData(data);
-  res.json(data.rulesets[idx]);
+app.put('/api/rulesets/:id', async (req, res) => {
+  try {
+    const existing = await getRuleset(req.params.id);
+    if (!existing) return res.status(404).json({ error: 'Not found' });
+    const updated = { ...existing, ...req.body, id: req.params.id, updatedAt: new Date().toISOString() };
+    await saveRuleset(updated);
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Publish ruleset
-app.post('/api/rulesets/:id/publish', (req, res) => {
-  const data = readData();
-  const idx = data.rulesets.findIndex(r => r.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  data.rulesets[idx].status = 'published';
-  data.rulesets[idx].updatedAt = new Date().toISOString();
-  writeData(data);
-  res.json(data.rulesets[idx]);
+app.post('/api/rulesets/:id/publish', async (req, res) => {
+  try {
+    const rs = await getRuleset(req.params.id);
+    if (!rs) return res.status(404).json({ error: 'Not found' });
+    rs.status = 'published';
+    rs.updatedAt = new Date().toISOString();
+    await saveRuleset(rs);
+    res.json(rs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Delete ruleset
-app.delete('/api/rulesets/:id', (req, res) => {
-  const data = readData();
-  const idx = data.rulesets.findIndex(r => r.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  data.rulesets.splice(idx, 1);
-  writeData(data);
-  res.json({ success: true });
+app.delete('/api/rulesets/:id', async (req, res) => {
+  try {
+    const rs = await getRuleset(req.params.id);
+    if (!rs) return res.status(404).json({ error: 'Not found' });
+    await deleteRuleset(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Simulate
 app.post('/api/rulesets/:id/simulate', async (req, res) => {
-  const { rulesets } = readData();
-  const rs = rulesets.find(r => r.id === req.params.id);
-  if (!rs) return res.status(404).json({ error: 'Not found' });
   try {
+    const rs = await getRuleset(req.params.id);
+    if (!rs) return res.status(404).json({ error: 'Not found' });
     const result = await executeRuleset(rs, req.body.input || {});
     res.json(result);
   } catch (err) {
@@ -117,14 +147,23 @@ app.post('/api/rulesets/:id/simulate', async (req, res) => {
 });
 
 // Duplicate ruleset
-app.post('/api/rulesets/:id/duplicate', (req, res) => {
-  const data = readData();
-  const rs = data.rulesets.find(r => r.id === req.params.id);
-  if (!rs) return res.status(404).json({ error: 'Not found' });
-  const copy = { ...JSON.parse(JSON.stringify(rs)), id: uuidv4(), name: rs.name + ' (Copy)', status: 'draft', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
-  data.rulesets.push(copy);
-  writeData(data);
-  res.status(201).json(copy);
+app.post('/api/rulesets/:id/duplicate', async (req, res) => {
+  try {
+    const rs = await getRuleset(req.params.id);
+    if (!rs) return res.status(404).json({ error: 'Not found' });
+    const copy = {
+      ...JSON.parse(JSON.stringify(rs)),
+      id: uuidv4(),
+      name: rs.name + ' (Copy)',
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    await saveRuleset(copy);
+    res.status(201).json(copy);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Convert GoRules JDM format → our internal format
@@ -153,7 +192,6 @@ function convertFromGoRules(body) {
         break;
 
       case 'decisionTableNode': {
-        // field may be missing on placeholder columns — fallback to name as field path
         const inputs = (content.inputs || []).map(i => ({ field: i.field || i.name || 'input', label: i.name || i.field || 'Input' }));
         const outputs = (content.outputs || []).map(o => ({ field: o.field || o.name || 'output', label: o.name || o.field || 'Output' }));
         const inputIds = (content.inputs || []).map(i => i.id);
@@ -181,8 +219,6 @@ function convertFromGoRules(body) {
       }
 
       case 'switchNode': {
-        // GoRules statements: [{id, condition, isDefault}]
-        // We preserve statement.id as the branch port so edges with sourceHandle=statement.id still route correctly
         const statements = content.statements || [];
         let ifCount = 0;
         const branches = statements.map(stmt => {
@@ -220,38 +256,37 @@ function convertFromGoRules(body) {
 }
 
 // Import ruleset from JSON (supports both our format and GoRules JDM format)
-app.post('/api/rulesets/import', (req, res) => {
-  const body = req.body;
-  const data = readData();
+app.post('/api/rulesets/import', async (req, res) => {
+  try {
+    const body = req.body;
+    let nodes, edges, name, description;
 
-  let nodes, edges, name, description;
+    if (body.contentType === 'application/vnd.gorules.decision') {
+      ({ nodes, edges } = convertFromGoRules(body));
+      name = body.name || 'Imported Ruleset';
+      description = body.description || 'Imported from GoRules';
+    } else {
+      nodes = body.nodes || [];
+      edges = body.edges || [];
+      name = body.name || 'Imported Ruleset';
+      description = body.description || '';
+    }
 
-  if (body.contentType === 'application/vnd.gorules.decision') {
-    // GoRules format — convert
-    ({ nodes, edges } = convertFromGoRules(body));
-    name = body.name || 'Imported Ruleset';
-    description = body.description || 'Imported from GoRules';
-  } else {
-    // Our own exported format
-    nodes = body.nodes || [];
-    edges = body.edges || [];
-    name = body.name || 'Imported Ruleset';
-    description = body.description || '';
+    const rs = {
+      id: uuidv4(),
+      name,
+      description,
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      nodes,
+      edges,
+    };
+    await saveRuleset(rs);
+    res.status(201).json(rs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const rs = {
-    id: uuidv4(),
-    name,
-    description,
-    status: 'draft',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    nodes,
-    edges,
-  };
-  data.rulesets.push(rs);
-  writeData(data);
-  res.status(201).json(rs);
 });
 
 // Serve built frontend in production
@@ -266,4 +301,6 @@ if (fs.existsSync(frontendDist)) {
 }
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`BRMS backend running at http://localhost:${PORT}`));
+initDb()
+  .then(() => app.listen(PORT, () => console.log(`BRMS backend running at http://localhost:${PORT}`)))
+  .catch(err => { console.error('DB init failed:', err.message); process.exit(1); });
