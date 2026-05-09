@@ -127,11 +127,11 @@ const nodeTypes: NodeTypes = {
   switch: SwitchNode,
 };
 
-const PALETTE_ITEMS: { type: NodeType; label: string; desc: string; color: string; icon: string }[] = [
-  { type: 'decisionTable', label: 'Decision Table', desc: 'Tabular rules with conditions', color: 'border-blue-200 bg-blue-50 text-blue-700', icon: '⊞' },
-  { type: 'function', label: 'Function', desc: 'Custom JavaScript logic', color: 'border-amber-200 bg-amber-50 text-amber-700', icon: '{}' },
-  { type: 'expression', label: 'Expression', desc: 'Boolean expression node', color: 'border-violet-200 bg-violet-50 text-violet-700', icon: 'f(x)' },
-  { type: 'switch', label: 'Switch', desc: 'Route based on conditions', color: 'border-rose-200 bg-rose-50 text-rose-700', icon: '⇄' },
+const PALETTE_ITEMS: { type: NodeType; label: string; desc: string; color: string; icon: string; iconColor: string }[] = [
+  { type: 'decisionTable', label: 'Decision Table', desc: 'Tabular rules with conditions', color: '', icon: '⊞', iconColor: 'text-blue-500' },
+  { type: 'function', label: 'Function', desc: 'Custom JavaScript logic', color: '', icon: '{}', iconColor: 'text-amber-500' },
+  { type: 'expression', label: 'Expression', desc: 'Boolean expression node', color: '', icon: 'fx', iconColor: 'text-violet-500' },
+  { type: 'switch', label: 'Switch', desc: 'Route based on conditions', color: '', icon: '⇄', iconColor: 'text-rose-500' },
 ];
 
 function makeDefaultData(type: NodeType): AnyNodeData {
@@ -527,11 +527,11 @@ export default function GraphEditor() {
         {/* Main row: sidebar + canvas + right panel */}
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Left sidebar — palette */}
-          <div className="w-44 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
-            <div className="px-3 py-2.5 border-b border-slate-100">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Components</p>
+          <div className="w-40 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
+            <div className="px-3 py-2 border-b border-slate-100">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Components</p>
             </div>
-            <div className="p-2 space-y-1 overflow-auto flex-1">
+            <div className="py-1 overflow-auto flex-1">
               {PALETTE_ITEMS.map(item => (
                 <div
                   key={item.type}
@@ -540,18 +540,15 @@ export default function GraphEditor() {
                     e.dataTransfer.setData('application/brms-node', item.type);
                     e.dataTransfer.effectAllowed = 'move';
                   }}
-                  className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg border cursor-grab active:cursor-grabbing select-none hover:shadow-sm transition-all ${item.color}`}
+                  className="flex items-center gap-2 px-3 py-2 cursor-grab active:cursor-grabbing select-none hover:bg-slate-50 transition-colors group"
                 >
-                  <span className="text-base font-mono font-bold w-5 text-center flex-shrink-0 leading-none">{item.icon}</span>
-                  <div className="min-w-0">
-                    <div className="text-xs font-semibold leading-tight">{item.label}</div>
-                    <div className="text-xs opacity-60 leading-tight truncate mt-0.5">{item.desc}</div>
-                  </div>
+                  <span className={`text-xs font-mono font-bold w-4 text-center flex-shrink-0 ${item.iconColor}`}>{item.icon}</span>
+                  <span className="text-xs font-medium text-slate-700 group-hover:text-slate-900 truncate">{item.label}</span>
                 </div>
               ))}
             </div>
-            <div className="px-3 py-2.5 border-t border-slate-100">
-              <p className="text-xs text-slate-400 leading-relaxed">Drag to canvas, then connect handles</p>
+            <div className="px-3 py-2 border-t border-slate-100">
+              <p className="text-[10px] text-slate-400">Drag onto canvas</p>
             </div>
           </div>
 
