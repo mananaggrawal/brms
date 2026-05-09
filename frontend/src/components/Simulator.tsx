@@ -148,8 +148,8 @@ export default function Simulator({ rulesetId, onClose, inputJson, onInputChange
       <div className="flex flex-1 min-h-0 overflow-hidden">
 
         {/* LEFT — Input */}
-        <div className="flex flex-col w-[38%] min-w-0 border-r border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between px-3 py-1.5 bg-slate-50 border-b border-slate-100 flex-shrink-0">
+        <div className="flex flex-col w-[38%] min-w-0 border-r border-slate-700 overflow-hidden bg-slate-900">
+          <div className="flex items-center justify-between px-3 py-1.5 bg-slate-800 border-b border-slate-700 flex-shrink-0">
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Input JSON</span>
             <button
               onClick={run}
@@ -170,7 +170,7 @@ export default function Simulator({ rulesetId, onClose, inputJson, onInputChange
               defaultLanguage="json"
               value={inputJson}
               onChange={v => onInputChange(v || '')}
-              theme="vs"
+              theme="vs-dark"
               options={{
                 minimap: { enabled: false },
                 fontSize: 12,

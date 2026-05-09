@@ -79,6 +79,8 @@ Bottom panel for testing a ruleset without publishing:
 4. **Context tab** — the full execution context after all nodes have run.
 5. After simulation, each node on the canvas is highlighted: **green** = executed, **yellow** = no match, **red** = error, **grey** = skipped.
 
+The simulator panel and all node editor panels are keyboard-isolated from the ReactFlow canvas — Space, Delete, and other keys work normally inside Monaco editors.
+
 ### Node Highlighting
 Simulation results are reflected on the canvas immediately — useful for visually tracing which path through a complex switch/decision tree was taken for a given input.
 
@@ -98,7 +100,7 @@ All rulesets are stored in a **PostgreSQL** database on Railway with a dedicated
 | Build | Vite | Dev server and production bundler |
 | Styling | Tailwind CSS | Utility-first CSS |
 | Graph canvas | @xyflow/react (ReactFlow v12) | Drag-and-drop node graph |
-| Code editor | @monaco-editor/react | JavaScript editing in Function nodes |
+| Code editor | @monaco-editor/react | JavaScript + JSON editing in Function nodes and Simulator |
 | Backend | Node.js + Express | REST API |
 | Rule engine | Node.js `vm` module | Sandboxed JS execution for functions/expressions |
 | Database | PostgreSQL | Persistent ruleset storage (JSONB) |

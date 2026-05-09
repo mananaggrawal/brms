@@ -57,7 +57,12 @@ ReactFlow provides the interactive graph canvas. It manages:
 Each node type is registered as a custom node component. ReactFlow's `useNodesState` and `useEdgesState` hooks hold the live graph state; changes flow into the debounced auto-save loop.
 
 ### @monaco-editor/react
-Monaco Editor (the same engine as VS Code) is embedded inside Function node editors. It provides syntax highlighting, auto-completion, and error markers for the JavaScript code that users write in function nodes.
+Monaco Editor (the same engine as VS Code) is embedded in two places:
+
+- **Function node editor** — JavaScript with syntax highlighting, auto-completion, and error markers.
+- **Simulator input panel** — JSON editor for crafting test inputs.
+
+All Monaco instances use a consistent `vs-dark` theme. Because Monaco exposes a single global theme state, mixing light and dark themes across instances causes erratic flickering; keeping them uniform eliminates this. Both panels also call `stopPropagation` on `keydown` events so that ReactFlow's global keyboard shortcuts (Space for pan, Delete for node removal) do not interfere with typing inside Monaco.
 
 ---
 
@@ -245,8 +250,15 @@ For each row in the table, every input column's condition is evaluated against t
 | Empty check | `is_empty` | Field is absent or blank |
 | Wildcard | *(blank)* | Always matches |
 | Full expression | `customer.age > 25` | Field path + operator + value |
+| Compound range | `>= 25000 and <= 200000` | Two conditions joined with `and` |
 
 On a match, output column values are written back to the context via `setNestedValue`. The **hit policy** controls how many rows are processed: `first` stops after the first match; `all` and `collect` continue through all rows.
+
+**GoRules JDM compatibility notes** — when importing GoRules decision tables, the engine transparently handles three quirks:
+
+1. **Numeric underscore separators** — GoRules allows `25_000`; the engine strips underscores before numeric comparison (`Number('25_000')` returns `NaN` in native JS).
+2. **Compound `and` ranges** — expressions like `>= 25_000 and <= 200_000` are split on ` and ` and both sub-expressions must match.
+3. **Field-path output values** — if an output cell contains a bare identifier like `card_variant.limit`, the engine resolves it as a field reference from the context rather than treating it as a literal string.
 
 ### Function Node
 
@@ -266,7 +278,7 @@ const result = await sandbox.__result;
 deepMerge(context, result);
 ```
 
-The function receives the context as `input` and returns an object. That object is deep-merged back into the context. Console output is captured and surfaced in the simulator trace.
+The function receives the context as `input` and returns an object. That object is deep-merged back into the context. Console output is captured and surfaced both in the simulator trace and in the inline **Console** panel at the bottom of the Function node editor. Objects and arrays passed to `console.log()` are serialised with `JSON.stringify` so that `[object Object]` is never shown.
 
 ### Expression Node
 

@@ -506,7 +506,7 @@ export default function GraphEditor() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-hidden">
           {type === 'decisionTable' && (
             <DecisionTableEditor
               data={data as DecisionTableData}
@@ -716,6 +716,7 @@ export default function GraphEditor() {
           <div
             className="flex-shrink-0 bg-white border-t border-slate-200 flex flex-col"
             style={{ height: simulatorHeight }}
+            onKeyDown={e => e.stopPropagation()}
           >
             {/* Top resize handle */}
             <div
