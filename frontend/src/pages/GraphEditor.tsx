@@ -664,8 +664,11 @@ export default function GraphEditor() {
           {/* Right panel — node editor + simulator as tabs */}
           {(selectedNode || showSimulator) && (
             <div
+              onKeyDown={e => e.stopPropagation()}
               className={`bg-white border-l border-slate-200 flex flex-col flex-shrink-0 ${
-                activeRightTab === 'node' && selectedNode?.type === 'decisionTable' ? 'w-[640px]' : 'w-[400px]'
+                activeRightTab === 'node' && selectedNode?.type === 'decisionTable' ? 'w-[640px]'
+                : activeRightTab === 'node' && (selectedNode?.type === 'function' || selectedNode?.type === 'expression') ? 'w-[560px]'
+                : 'w-[420px]'
               }`}
             >
               {/* Tab bar */}
