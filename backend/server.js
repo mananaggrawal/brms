@@ -223,5 +223,16 @@ app.post('/api/rulesets/import', (req, res) => {
   res.status(201).json(rs);
 });
 
+// Serve built frontend in production
+const frontendDist = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(frontendDist, 'index.html'));
+    }
+  });
+}
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`BRMS backend running at http://localhost:${PORT}`));

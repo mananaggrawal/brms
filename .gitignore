@@ -1,5 +1,4 @@
 node_modules/
-dist/
 .env
 *.log
-data/rulesets.json
+backend/data/rulesets.json
